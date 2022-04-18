@@ -1,4 +1,4 @@
-=== Rust Gutenberg TypeScript ===
+=== Image Filters ===
 Contributors:      kbat82
 Tags:              block
 Tested up to:      5.9
@@ -6,11 +6,11 @@ Stable tag:        0.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-An example block built using Rust and TypeScript
+Apply image filters to the native Image block.
 
 == Description ==
 
-This is a starter for building Gutenberg Blocks with Rust and TypeScript. You're not limited to Blocks, however.
+TODO
 
 == Installation ==
 
@@ -19,13 +19,13 @@ This is a starter for building Gutenberg Blocks with Rust and TypeScript. You're
 
 == Frequently Asked Questions ==
 
-= What is Rust? =
+= Do you save the images to my file system? =
 
-Rust is a systems program that can compile to WebAssembly and be used in the browser via JavaScript.
+Yes, when you select an image filter, the new image will be added to the WP media library.
 
-= What about foo bar? =
+= What happens if I disable your block? =
 
-Answer to foo bar dilemma.
+You will still have the edited image, which you can use however you like.
 
 == Screenshots ==
 
@@ -39,9 +39,3 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 = 0.1.0 =
 * Release
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above. This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation." Arbitrary sections will be shown below the built-in sections outlined above.

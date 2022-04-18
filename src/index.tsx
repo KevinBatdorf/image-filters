@@ -1,38 +1,60 @@
+import {
+    InnerBlocks,
+    useBlockProps as blockProps,
+} from '@wordpress/block-editor'
 import { registerBlockType } from '@wordpress/blocks'
-import { useBlockProps as blockProps } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
-import { TheBlock } from './front/TheBlock'
-import { Controls } from './editor/Controls'
 import blockConfig from './block.json'
+import { ImageContainer } from './editor/ImageContainer'
+import { ModalLoader } from './editor/ModalLoader'
+import { SideControls } from './editor/SideControls'
+import { blockIcon } from './icons'
+import { Attributes } from './types'
 
-export type Attributes = {
-    text: string
-}
-
-registerBlockType<Attributes>('kevinbatdorf/rust-starter', {
+registerBlockType<Attributes>('kevinbatdorf/image-filters-block', {
     ...blockConfig,
-    icon: undefined,
-    // Types seem to be mismatched if importing these from block.json
+    icon: blockIcon,
     attributes: {
-        text: {
-            type: 'string',
-            default: 'Loading...',
-        },
+        originalImageId: { type: 'number' },
+        currentImageId: { type: 'number' },
     },
-
-    title: __('Rust Starter', 'rust-starter'),
-    edit: ({ attributes, setAttributes }) => (
-        <>
-            <Controls attributes={attributes} setAttributes={setAttributes} />
-            <div {...blockProps()}>
-                <TheBlock {...attributes} />
-            </div>
-        </>
-    ),
+    title: __('Image Filters', 'image-filters-block'),
+    edit: ({ attributes, setAttributes, clientId }) => {
+        // TODO: bring in something to manage state better?
+        return (
+            <>
+                <ModalLoader
+                    attributes={attributes}
+                    clientId={clientId}
+                    setAttributes={setAttributes}
+                />
+                <SideControls
+                    attributes={attributes}
+                    clientId={clientId}
+                    setAttributes={setAttributes}
+                />
+                <div {...blockProps()}>
+                    <ImageContainer
+                        clientId={clientId}
+                        attributes={attributes}
+                        setAttributes={setAttributes}>
+                        <InnerBlocks
+                            template={[['core/image', {}]]}
+                            allowedBlocks={['core/image']}
+                            templateLock="all"
+                        />
+                    </ImageContainer>
+                </div>
+            </>
+        )
+    },
     save: ({ attributes }) => {
         return (
             <div {...blockProps.save()}>
-                <TheBlock {...attributes} />
+                {/* TODO: remove this? */}
+                <div {...attributes}>
+                    <InnerBlocks.Content />
+                </div>
             </div>
         )
     },

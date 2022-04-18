@@ -1,21 +1,19 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 2,
-    "name": "kevinbatdorf/rust-starter",
+    "name": "kevinbatdorf/image-filters-block",
     "version": "0.1.0",
-    "title": "Rust Gutenberg TypeScript",
-    "category": "common",
-    "description": "An example block built using Rust and TypeScript",
+    "title": "Image Filters",
+    "category": "media",
+    "description": "Apply image filters to the native Image block.",
     "attributes": {
-        "text": {
-            "type": "string",
-            "source": "text"
-        }
+        "originalImageId": { "type": "number" },
+        "currentImageId": { "type": "number" }
     },
     "supports": {
         "html": false
     },
-    "textdomain": "rust-starter",
+    "textdomain": "image-filters-block",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css"

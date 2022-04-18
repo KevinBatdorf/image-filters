@@ -1,8 +1,14 @@
 import { useEffect, useState } from '@wordpress/element'
-import init, { get_text } from '../../pkg/index.js'
+import init, {
+    open_image,
+    do_something,
+    to_image_data,
+} from '../../pkg/index.js'
 
 interface Server {
-    get_text: () => string
+    open_image: any
+    do_something: any
+    to_image_data: any
 }
 
 export const useServer = () => {
@@ -10,7 +16,7 @@ export const useServer = () => {
     useEffect(() => {
         const fetchWasmCode = async () => {
             await init()
-            setServer({ get_text })
+            setServer({ open_image, do_something, to_image_data })
         }
         fetchWasmCode()
     }, [])

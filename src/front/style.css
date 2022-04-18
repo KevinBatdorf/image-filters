@@ -1,12 +1,12 @@
-.rust-starter {
+.image-filters-block {
     --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
     --tw-ring-offset-width: 0px;
     --tw-ring-offset-color: transparent;
     /* --tw-ring-color: you-may-want-to-update-this; */
 }
-.rust-starter *,
-.rust-starter *:after,
-.rust-starter *:before {
+.image-filters-block *,
+.image-filters-block *:after,
+.image-filters-block *:before {
     box-sizing: border-box;
     border: 0 solid #e5e7eb;
 }
