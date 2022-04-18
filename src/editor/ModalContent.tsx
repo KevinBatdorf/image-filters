@@ -72,3 +72,4 @@ export const ModalContent = ({
 // - Create component to display filters
 // - figure out how to save an image to the media library
 // - replace the media in the inner block or just replace the entire block before closing the modal
+// - do something if they attempt to see the filters but have no image set
