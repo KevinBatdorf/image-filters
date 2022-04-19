@@ -2,6 +2,7 @@ export type Attributes = {
     originalImageId: number
     currentImageId: number
 }
-type WpImage = {
+export type WpImage = {
     source_url: string
 }
+export type PhotonImage = T

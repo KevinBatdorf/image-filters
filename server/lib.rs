@@ -1,13 +1,8 @@
-use photon_rs::{filters::*, monochrome::*, open_image, PhotonImage};
+pub use photon_rs::{filters::*, open_image, to_image_data, PhotonImage};
 use wasm_bindgen::prelude::*;
-use web_sys::{console::log_1 as log, CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
+use web_sys::console::log_1 as log;
 
 #[wasm_bindgen]
-pub fn do_something(mut image: PhotonImage) -> PhotonImage {
-    log(&"Logging from Rust!".into());
-    // let  image = PhotonImage::from(image_data);
-    // monochrome(&mut image, 0_u32, 5_u32, 10_u32);
-    obsidian(&mut image);
-    // log(&JsValue::from_str(&image.get_image_data()));
-    image
+pub fn console_log(message: String) {
+    log(&message.into());
 }

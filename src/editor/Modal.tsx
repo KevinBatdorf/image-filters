@@ -21,6 +21,9 @@ export const Modal = ({
     setAttributes,
 }: ModalProps) => {
     const intialFocus = useRef(null)
+    const setImage = (image: ImageData) => {
+        console.log(image)
+    }
     return (
         <AnimatePresence>
             {open && (
@@ -46,7 +49,7 @@ export const Modal = ({
                             <ModalContent
                                 attributes={attributes}
                                 clientId={clientId}
-                                setAttributes={setAttributes}
+                                setImage={setImage}
                             />
                         </motion.div>
                     </div>

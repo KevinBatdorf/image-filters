@@ -1,67 +1,43 @@
 import { useSelect } from '@wordpress/data'
 import { useState, useEffect } from '@wordpress/element'
-import { useServer } from '../hooks/useServer'
-import type { Attributes, WpImage } from '../types'
+import filters from '../filters.json'
+import { Attributes, WpImage } from '../types'
+import { FilteredImage } from './FilteredImage'
 
 type ModalContentProps = {
     attributes: Attributes
-    setAttributes: (attributes: Attributes) => void
+    setImage: (image: ImageData) => void
     clientId?: string
 }
-export const ModalContent = ({
-    attributes,
-    setAttributes,
-    clientId,
-}: ModalContentProps) => {
+
+export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
     const { originalImageId } = attributes
     const [sourceUrl, setSourceUrl] = useState('')
     const originalImage: WpImage = useSelect((s) =>
         s('core')?.getMedia(originalImageId),
     )
-    const server = useServer()
-    console.log(originalImage)
-    const loadImage = (img: any) => {
-        return new Promise((resolve) => (img.onload = resolve))
-    }
-    const handleApplyFilter = () => {
-        // setAttributes()
-        console.log('here')
-    }
+
     useEffect(() => {
         if (originalImage) {
             setSourceUrl(originalImage.source_url)
         }
     }, [originalImage])
 
-    useEffect(() => {
-        if (!server?.open_image) return
-        const canvas = document.createElement('canvas')
-        const img = new Image()
-        img.src = sourceUrl
-        console.log(img)
-        loadImage(img).then(() => {
-            canvas.width = img.width
-            canvas.height = img.height
-            const ctx = canvas.getContext('2d')
-            ctx?.drawImage(img, 0, 0)
-            const photonImage = server?.open_image(canvas, ctx)
-            const pImg = server?.do_something(photonImage)
-            console.log({ pImg })
-            const c = document.getElementById(
-                'canvas-mine',
-            ) as HTMLCanvasElement
-            if (c) {
-                c.height = img.height
-                c.width = img.width
-                const ctx = c.getContext('2d')
-                ctx?.putImageData(server?.to_image_data(pImg), 0, 0)
-            }
-        })
-    }, [sourceUrl, server])
+    if (!sourceUrl) return <p>Loading..</p>
 
     return (
         <div className="overflow-y-scroll">
-            <canvas className="w-full block" id="canvas-mine"></canvas>
+            <div className="grid grid-cols-3 gap-4 p-4">
+                {Object.entries(filters).map(([filter, name]) => (
+                    <FilteredImage
+                        key={name}
+                        sourceUrl={sourceUrl}
+                        setImage={setImage}
+                        name={name}
+                        filter={filter}
+                    />
+                ))}
+            </div>
         </div>
     )
 }
