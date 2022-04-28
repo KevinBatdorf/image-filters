@@ -25,12 +25,12 @@ export const SideControls = ({ attributes }: ControlProps) => {
             <PanelBody title={__('Details', 'image-filters-block')}>
                 <BaseControl id="image-filter-sources">
                     <div className="image-filters-block-editor">
-                        {originalImage?.source_url && (
+                        {originalImage?.source_url ? (
                             <>
                                 <p className="text-xs text-gray-900 mb-2">
                                     {__('Original', 'image-filters-block')}
                                 </p>
-                                <div className="p-2 bg-gray-200 mb-4">
+                                <div className="bg-gray-200 mb-4">
                                     <img
                                         className="block"
                                         alt="Original"
@@ -38,6 +38,13 @@ export const SideControls = ({ attributes }: ControlProps) => {
                                     />
                                 </div>
                             </>
+                        ) : (
+                            <p className="text-xs text-gray-900 mb-2">
+                                {__(
+                                    'No image found. Set an image first before applying filters.',
+                                    'image-filters-block',
+                                )}
+                            </p>
                         )}
                         {/* TODO: If updated, show revert button */}
                     </div>

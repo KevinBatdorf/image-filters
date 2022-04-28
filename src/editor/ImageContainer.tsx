@@ -19,6 +19,7 @@ export const ImageContainer = ({
     const { getBlock } = useSelect((s) => s('core/block-editor'))
     const innerBlockData = getBlock(clientId)?.innerBlocks[0]
     const originalImageId = innerBlockData?.attributes?.id
+    console.log({ i: innerBlockData?.attributes })
     useEffect(() => {
         // if no current image is set, this is the first run
         if (!attributes?.currentImageId) {

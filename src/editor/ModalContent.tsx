@@ -1,5 +1,6 @@
 import { useSelect } from '@wordpress/data'
 import { useState, useEffect } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 import filters from '../filters.json'
 import { Attributes, WpImage } from '../types'
 import { FilteredImage } from './FilteredImage'
@@ -23,7 +24,18 @@ export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
         }
     }, [originalImage])
 
-    if (!sourceUrl) return <p>Loading..</p>
+    console.log(Object.entries(filters))
+    if (!sourceUrl)
+        return (
+            <div className="flex items-center justify-center h-full w-full">
+                <p className="m-0 p-0 text-md font-bold">
+                    {__(
+                        'No image found. Set an image first before applying filters.',
+                        'image-filters-block',
+                    )}
+                </p>
+            </div>
+        )
 
     return (
         <div className="overflow-y-scroll">
