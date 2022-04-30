@@ -1,4 +1,5 @@
 import { useRef } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useWpImage } from '../hooks/useWpImage'
@@ -33,6 +34,8 @@ export const Modal = ({
     // by cloning the existing one
     // TODO:
     // - Add revert button on sidebar
+    // first one be original image?
+    // Add warning about complex images
     // Check why originalimage isnt updating
     // - figure out how to save an image to the media library
     // - replace the media in the inner block or just replace the entire block before closing the modal
@@ -50,8 +53,8 @@ export const Modal = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     open={open}
-                    onClose={() => ({})}>
-                    <div className="absolute mx-auto w-full h-full p-24">
+                    onClose={onClose}>
+                    <div className="absolute mx-auto w-full h-full p-8 lg:p-24">
                         <Dialog.Overlay className="fixed inset-0 bg-black opacity-40" />
                         <motion.div
                             key="modal"
@@ -59,7 +62,13 @@ export const Modal = ({
                             animate={{ y: 0 }}
                             exit={{ y: 0, opacity: 0 }}
                             className="flex flex-col bg-gray-50 h-full w-full relative rounded-md shadow-lg overflow-hidden">
-                            <ModalToolbar onClose={onClose} />
+                            <ModalToolbar
+                                onClose={onClose}
+                                title={__(
+                                    'Select a filter',
+                                    'image-filters-block',
+                                )}
+                            />
                             <ModalContent
                                 attributes={attributes}
                                 setImage={setImage}

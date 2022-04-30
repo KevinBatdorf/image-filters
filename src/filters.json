@@ -5,11 +5,12 @@
     "serenity": "Serenity",
     "cali": "Cali",
     "obsidian": "Obsidian",
-    "pastel_pink": "Pastel Pink",
     "bluechrome": "Bluechrome",
-    "lofi": "Lofi",
+    "pastel_pink": "Pastel Pink",
     "oceanic": "Oceanic",
     "perfume": "Perfume",
+    "rosetint": "Rosetint",
+    "lofi": "Lofi",
     "dramatic": "Dramatic",
     "islands": "Islands",
     "marine": "Marine",
@@ -19,6 +20,5 @@
     "liquid": "Liquid",
     "radio": "Radio",
     "twenties": "Twenties",
-    "rosetint": "Rosetint",
     "mauve": "Mauve"
 }

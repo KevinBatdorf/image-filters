@@ -52,7 +52,8 @@ export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
                     <motion.div
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="bg-white flex justify-start w-full p-2 shadow-lg absolute bottom-0 z-10 border-t border-gray-100">
+                        transition={{ opacity: { duration: 0.5 } }}
+                        className="bg-white flex justify-start w-full p-2 shadow-lg absolute bottom-0 z-40 border-t border-gray-100">
                         <p className="m-0 p-0 text-md font-bold">
                             {sprintf(
                                 __(
@@ -66,7 +67,7 @@ export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <div className="grid w-full grid-cols-3 gap-4 p-4">
+            <div className="grid w-full grid-cols-4 gap-4 p-4 bg-gray-50">
                 {loadedFilters?.map((batch) => (
                     <PageLoader
                         key={batch.toString()}
@@ -76,9 +77,11 @@ export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
                         setImage={setImage}
                     />
                 ))}
-                {Array.from(
-                    { length: Object.keys(filters).length - loaded },
-                    (_, i) => {
+                {Object.keys(filters)
+                    .slice(loaded)
+                    .map((_, i, all) => {
+                        const opacity =
+                            all.length / (Math.max(i, all.length / 2) + 1) - 1
                         const aspectRatio =
                             wpImage?.media_details?.width /
                                 wpImage?.media_details?.height +
@@ -86,16 +89,19 @@ export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
                         return (
                             <motion.div
                                 layout
-                                style={{ aspectRatio }}
-                                animate={{ opacity: 1 }}
-                                transition={{ opacity: { duration: 2 } }}
-                                exit={{ opacity: 0 }}
+                                style={{
+                                    aspectRatio,
+                                    opacity,
+                                }}
                                 key={i}
-                                className="animate-pulse overflow-hidden w-full bg-gray-100 m-0 p-0 flex items-center justify-center"
+                                className={`bg-gray-100 overflow-hidden w-full m-0 p-0 flex items-center justify-center border ${
+                                    opacity > 0.5
+                                        ? 'animate-pulse'
+                                        : 'animate-pulse-light'
+                                }`}
                             />
                         )
-                    },
-                )}
+                    })}
             </div>
         </div>
     )

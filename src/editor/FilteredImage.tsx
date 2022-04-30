@@ -39,22 +39,24 @@ export const FilteredImage = ({
     }
 
     return (
-        <button
-            ref={buttonRef}
-            style={{ aspectRatio: imageData.width / imageData.height + '' }}
-            className="ww-full overflow-hidden bg-gray-100 m-0 p-0 flex items-end relative"
-            onClick={handleClick}>
-            <p className="absolute text-xs m-0 p-2 py-1 bg-gray-900 text-gray-300">
-                {name}
-            </p>
-            <motion.span
-                layout
-                className="w-full"
-                initial={{ opacity: 0.0 }}
-                transition={{ opacity: { duration: 0.2 } }}
-                animate={{ opacity: 1 }}>
+        <motion.div
+            layout
+            className="w-full"
+            initial={{ opacity: 0.0 }}
+            transition={{ opacity: { duration: 0.2 } }}
+            animate={{ opacity: 1 }}>
+            <button
+                ref={buttonRef}
+                style={{ aspectRatio: imageData.width / imageData.height + '' }}
+                className="w-full bg-gray-100 m-0 p-0 flex items-end relative border"
+                onClick={handleClick}>
+                <div className="absolute flex inset-0 items-end z-10">
+                    <p className="text-xs m-0 p-2 py-0.5 bg-gray-900 text-gray-300">
+                        {name}
+                    </p>
+                </div>
                 <canvas className="max-w-full block" ref={canvasRef}></canvas>
-            </motion.span>
-        </button>
+            </button>
+        </motion.div>
     )
 }

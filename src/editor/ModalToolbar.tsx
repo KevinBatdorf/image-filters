@@ -3,13 +3,19 @@ import { __ } from '@wordpress/i18n'
 import { Dialog } from '@headlessui/react'
 import { blockIcon, closeX } from '../icons'
 
-export const ModalToolbar = ({ onClose }: { onClose: () => void }) => (
-    <div className="text-center flex items-center justify-between border-b border-gray-300 p-2 bg-white">
+export const ModalToolbar = ({
+    onClose,
+    title,
+}: {
+    onClose: () => void
+    title: string
+}) => (
+    <div className="text-center flex items-center justify-between border-b border-gray-300 p-2 bg-white space-x-8">
         <div className="w-6 h-6">
             <Icon icon={blockIcon} size={24} />
         </div>
-        <Dialog.Title className="m-0 text-lg text-gray-900 leading-none font-medium">
-            {__('Select a filter', 'image-filters-block')}
+        <Dialog.Title className="m-0 text-base text-gray-900 leading-none font-medium">
+            {title}
         </Dialog.Title>
         <div>
             <button
