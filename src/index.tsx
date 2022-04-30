@@ -20,18 +20,7 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters-block', {
     },
     title: __('Image Filters', 'image-filters-block'),
     edit: ({ attributes, setAttributes, clientId }) => {
-        // TODO: bring in something to manage state better?
-        // If they have an image set, but not a filter (or they are identical), then preemptively
-        // render all the filters:
-        //   Do we cache the filters? in memory only?
-        //   Do we warn if the image is too large?
 
-        // Full loop over filters here with a single object
-        // into array of imageData objects
-
-        // how to accept and persist data
-        // After that, get the image info and create a new image block
-        // by cloning the existing one
         return (
             <>
                 <ModalLoader

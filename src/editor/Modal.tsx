@@ -1,6 +1,7 @@
 import { useRef } from '@wordpress/element'
 import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useWpImage } from '../hooks/useWpImage'
 import type { Attributes } from '../types'
 import { ModalContent } from './ModalContent'
 import { ModalToolbar } from './ModalToolbar'
@@ -21,9 +22,22 @@ export const Modal = ({
     setAttributes,
 }: ModalProps) => {
     const intialFocus = useRef(null)
+    const { originalImageId } = attributes
+    const wpImage = useWpImage(originalImageId)
     const setImage = (image: ImageData) => {
-        console.log(image)
+        console.log({ wpImage, image, clientId })
     }
+
+    // how to accept and persist data
+    // After that, get the image info and create a new image block
+    // by cloning the existing one
+    // TODO:
+    // - Add revert button on sidebar
+    // Check why originalimage isnt updating
+    // - figure out how to save an image to the media library
+    // - replace the media in the inner block or just replace the entire block before closing the modal
+    // Generally check for performance improvements
+
     return (
         <AnimatePresence>
             {open && (
@@ -48,7 +62,6 @@ export const Modal = ({
                             <ModalToolbar onClose={onClose} />
                             <ModalContent
                                 attributes={attributes}
-                                clientId={clientId}
                                 setImage={setImage}
                             />
                         </motion.div>

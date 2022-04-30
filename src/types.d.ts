@@ -4,5 +4,9 @@ export type Attributes = {
 }
 export type WpImage = {
     source_url: string
+    media_details: {
+        height: number
+        width: number
+    }
 }
 export type PhotonImage = T

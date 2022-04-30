@@ -14,7 +14,8 @@ export const ModalLoader = ({
     setAttributes,
     clientId,
 }: ModalLoaderProps) => {
-    const [showFilters, setShowFilters] = useState(false)
+    const [showFilters, setShowFilters] = useState(true)
+
     return (
         <>
             <ToolbarControls openFilters={() => setShowFilters(true)} />
