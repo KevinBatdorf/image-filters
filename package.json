@@ -1,5 +1,5 @@
 {
-    "name": "image-filters-block",
+    "name": "image-filters",
     "version": "0.1.0",
     "description": "Apply image filters to the core image block.",
     "author": "Kevin Batdorf",

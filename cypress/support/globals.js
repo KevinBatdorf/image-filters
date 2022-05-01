@@ -20,6 +20,6 @@ beforeEach(() => {
 
 afterEach(() => {
     cy.saveDraft() // so we can leave without an alert
-    // cy.uninstallPlugin('image-filters-block')
+    // cy.uninstallPlugin('image-filters')
     cy.logoutUser()
 })

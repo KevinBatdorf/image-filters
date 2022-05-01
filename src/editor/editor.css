@@ -1,12 +1,12 @@
-.image-filters-block-editor {
+.image-filters-editor {
     --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
     --tw-ring-offset-width: 0px;
     --tw-ring-offset-color: transparent;
     --tw-ring-color: var(--wp-admin-theme-color);
 }
-.image-filters-block-editor *,
-.image-filters-block-editor *:after,
-.image-filters-block-editor *:before {
+.image-filters-editor *,
+.image-filters-editor *:after,
+.image-filters-editor *:before {
     box-sizing: border-box;
     border: 0 solid #e5e7eb;
 }
@@ -14,7 +14,7 @@
 @tailwind components;
 @tailwind utilities;
 /* Add more styles here specific to the editor only */
-.image-filters-block-editor.ifb-modal {
+.image-filters-editor.ifb-modal {
     @apply fixed z-high inset-0 overflow-y-auto;
 }
 
@@ -25,9 +25,15 @@
     50% { opacity: 0.1 }
 }
 
-.image-filters-block-editor .animate-pulse-light {
+.image-filters-editor .animate-pulse-light {
     animation: ifb-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-.image-filters-block-editor .animate-pulse-light {
+.image-filters-editor .animate-pulse-light {
     animation: ifb-pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.image-filters-editor .checkbox-control-mb-0 .components-base-control__field {
+    @apply mb-0;
+}
+.image-filters-editor .checkbox-control-mb-0 .components-checkbox-control__input-container {
+    @apply mr-2;
 }

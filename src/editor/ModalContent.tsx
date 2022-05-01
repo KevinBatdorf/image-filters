@@ -1,8 +1,14 @@
 import { store as blockEditorStore } from '@wordpress/block-editor'
 import { useSelect } from '@wordpress/data'
-import { useEffect, useState, useLayoutEffect } from '@wordpress/element'
+import {
+    useEffect,
+    useState,
+    useLayoutEffect,
+    useMemo,
+    memo,
+} from '@wordpress/element'
 import { sprintf, __ } from '@wordpress/i18n'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import filters from '../filters.json'
 import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
@@ -13,19 +19,21 @@ import { PageLoader } from './PageLoader'
 type ModalContentProps = {
     attributes: Attributes
     setImage: (image: ImageData, filterName: string) => void
+    setInfoMessage: (message: string) => void
     clientId?: string
 }
 
-export const ModalContent = ({
+export const ModalContent = memo(function ModalContent({
     attributes,
     setImage,
+    setInfoMessage,
     clientId,
-}: ModalContentProps) => {
+}: ModalContentProps) {
     const { sourceImageId, filteredFromImageId } = attributes
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
-    const batches = batch(filters, 1)
+    const batches = useMemo(() => batch(filters, 1), [])
     const [loaded, setLoaded] = useState(0)
-    const [error, setError] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const [loadedFilters, setLoadedFilters] = useState<[string, string][][]>()
     const isMounted = useIsMounted()
     const block = useSelect((select) => {
@@ -41,71 +49,65 @@ export const ModalContent = ({
             raf = requestAnimationFrame(() => {
                 if (!isMounted) return
                 setLoadedFilters(batches.slice(0, loaded + 1))
+                setInfoMessage(getInfoMessage(loaded, batches))
             })
+            return () => {
+                cancelAnimationFrame(raf)
+            }
         }
-        return () => {
-            cancelAnimationFrame(raf)
-        }
-    }, [loaded, batches, loadedFilters, isMounted])
+    }, [loaded, batches, loadedFilters, isMounted, setInfoMessage])
+
+    useEffect(() => {
+        const id = setTimeout(() => {
+            if (!isMounted || loaded >= batches.length) return
+            setInfoMessage(
+                __(
+                    'Filter generating stuck? Try closing and reopening the modal.',
+                    'image-filters',
+                ),
+            )
+        }, 25_000)
+        return () => clearTimeout(id)
+    }, [loadedFilters, isMounted, loaded, batches.length, setInfoMessage])
 
     useLayoutEffect(() => {
         if (block && !block?.innerBlocks[0]) {
-            setError(
+            setErrorMessage(
                 __(
                     'No image block found. Image Filters requires an image block in the first position.',
-                    'image-filters-block',
+                    'image-filters',
                 ),
             )
             return
         }
         if (!wpImage?.source_url) {
-            setError(
+            setErrorMessage(
                 __(
                     'No image found. Set an image first before applying filters.',
-                    'image-filters-block',
+                    'image-filters',
                 ),
             )
             return
         }
-        setError('')
+        setErrorMessage('')
     }, [wpImage, block])
 
-    if (error) {
+    if (errorMessage) {
         return (
             <div className="flex items-center justify-center h-full w-full">
-                <p className="m-0 p-0 text-md font-bold">{error}</p>
+                <p className="m-0 p-0 text-md font-bold">{errorMessage}</p>
             </div>
         )
     }
 
     return (
         <div className="overflow-y-scroll h-full flex flex-col items-center">
-            <AnimatePresence>
-                {loaded < batches.length && (
-                    <motion.div
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ opacity: { duration: 0.5 } }}
-                        className="bg-white flex justify-start w-full p-2 shadow-lg absolute bottom-0 z-40 border-t border-gray-100">
-                        <p className="m-0 p-0 text-md font-bold">
-                            {sprintf(
-                                __(
-                                    'Generating %1$s of %2$s filters...',
-                                    'image-filters-block',
-                                ),
-                                loaded + 1,
-                                Object.keys(filters).length,
-                            )}
-                        </p>
-                    </motion.div>
-                )}
-            </AnimatePresence>
             <div className="grid w-full grid-cols-4 gap-4 p-4 bg-gray-50">
                 {loadedFilters?.map((batch) => (
                     <PageLoader
                         key={batch.toString()}
                         setLoaded={() => setLoaded((loaded) => loaded + 1)}
-                        sourceUrl={wpImage.source_url}
+                        sourceUrl={wpImage?.source_url ?? ''}
                         attributes={attributes}
                         filters={batch}
                         setImage={setImage}
@@ -116,10 +118,12 @@ export const ModalContent = ({
                     .map((_, i, all) => {
                         const opacity =
                             all.length / (Math.max(i, all.length / 2) + 1) - 1
-                        const aspectRatio =
-                            wpImage?.media_details?.width /
-                                wpImage?.media_details?.height +
-                            ''
+                        const aspectRatio = wpImage?.media_details?.width
+                            ? String(
+                                  wpImage?.media_details?.width /
+                                      wpImage?.media_details?.height,
+                              )
+                            : undefined
                         return (
                             <motion.div
                                 layout
@@ -138,5 +142,16 @@ export const ModalContent = ({
                     })}
             </div>
         </div>
+    )
+})
+
+const getInfoMessage = (loaded: number, batches: [string, string][][]) => {
+    if (loaded >= batches.length) {
+        return ''
+    }
+    return sprintf(
+        __('Generating %1$s of %2$s filters...', 'image-filters'),
+        loaded + 1,
+        Object.keys(filters).length,
     )
 }

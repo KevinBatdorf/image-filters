@@ -1,4 +1,4 @@
-import { useRef } from '@wordpress/element'
+import { useRef, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -23,12 +23,13 @@ export const Modal = ({
     clientId,
 }: ModalProps) => {
     const intialFocus = useRef(null)
+    const [infoMessage, setInfoMessage] = useState<string>()
 
     return (
         <AnimatePresence>
             {open && (
                 <Dialog
-                    className="image-filters-block-editor ifb-modal"
+                    className="image-filters-editor ifb-modal"
                     static
                     initialFocus={intialFocus}
                     as={motion.div}
@@ -44,19 +45,30 @@ export const Modal = ({
                             initial={{ y: 30 }}
                             animate={{ y: 0 }}
                             exit={{ y: 0, opacity: 0 }}
-                            className="flex flex-col bg-gray-50 h-full w-full relative rounded-md shadow-lg overflow-hidden">
+                            className="flex flex-col bg-gray-50 h-full w-full relative shadow-lg overflow-hidden">
                             <ModalToolbar
                                 onClose={onClose}
-                                title={__(
-                                    'Select a filter',
-                                    'image-filters-block',
-                                )}
+                                title={__('Select a filter', 'image-filters')}
                             />
                             <ModalContent
                                 attributes={attributes}
                                 setImage={setImage}
+                                setInfoMessage={setInfoMessage}
                                 clientId={clientId}
                             />
+                            <AnimatePresence>
+                                {infoMessage && (
+                                    <motion.div
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0, bottom: '-40px' }}
+                                        transition={{ duration: 0.5 }}
+                                        className="bg-white flex justify-start w-full p-2 shadow-lg absolute bottom-0 z-40 border-t border-gray-100">
+                                        <p className="m-0 p-0 text-md font-bold">
+                                            {infoMessage}
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
                     </div>
                 </Dialog>

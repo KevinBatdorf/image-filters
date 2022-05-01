@@ -19,13 +19,13 @@ export const SideControls = ({ attributes }: ControlProps) => {
 
     return (
         <InspectorControls>
-            <PanelBody title={__('Details', 'image-filters-block')}>
+            <PanelBody title={__('Details', 'image-filters')}>
                 <BaseControl id="image-filter-sources">
-                    <div className="image-filters-block-editor">
+                    <div className="image-filters-editor">
                         {sourceImage?.source_url ? (
                             <>
                                 <p className="text-xs text-gray-900 mb-2">
-                                    {__('Original', 'image-filters-block')}
+                                    {__('Original', 'image-filters')}
                                 </p>
                                 <div className="bg-gray-200 mb-4">
                                     <img
@@ -39,7 +39,7 @@ export const SideControls = ({ attributes }: ControlProps) => {
                             <p className="text-xs text-gray-900 mb-2">
                                 {__(
                                     'No image found. Set an image first before applying filters.',
-                                    'image-filters-block',
+                                    'image-filters',
                                 )}
                             </p>
                         )}
@@ -47,7 +47,7 @@ export const SideControls = ({ attributes }: ControlProps) => {
                     <div className="bg-gray-100 p-2">
                         {__(
                             'To restore the original image, select the image block and press the replace button.',
-                            'image-filters-block',
+                            'image-filters',
                         )}
                     </div>
                 </BaseControl>

@@ -11,7 +11,7 @@ import { SideControls } from './editor/SideControls'
 import { blockIcon } from './icons'
 import { Attributes } from './types'
 
-registerBlockType<Attributes>('kevinbatdorf/image-filters-block', {
+registerBlockType<Attributes>('kevinbatdorf/image-filters', {
     ...blockConfig,
     icon: blockIcon,
     attributes: {
@@ -20,7 +20,7 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters-block', {
         currentFilterSlug: { type: 'string' },
         filteredFromImageId: { type: 'number' },
     },
-    title: __('Image Filters', 'image-filters-block'),
+    title: __('Image Filters', 'image-filters'),
     edit: ({ attributes, setAttributes, clientId }) => {
         return (
             <>

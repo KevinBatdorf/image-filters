@@ -1,5 +1,4 @@
 import { useEffect, useRef } from '@wordpress/element'
-import filtersList from '../filters.json'
 import { useFilteredImages } from '../hooks/useFilteredImages'
 import { Attributes } from '../types'
 import { FilteredImage } from './FilteredImage'
@@ -19,7 +18,6 @@ export const PageLoader = ({
     attributes,
 }: PageLoaderProps) => {
     const once = useRef(false)
-    const theFilters: Record<string, string> = filtersList
     const { filteredImageData, isLoading, errorMsg } = useFilteredImages(
         `${sourceUrl}?filters=${filters.toString()}`,
         Object.fromEntries(filters),
@@ -45,12 +43,7 @@ export const PageLoader = ({
             {Object.entries(filteredImageData).map(([name, imageData]) => (
                 <FilteredImage
                     key={name}
-                    current={
-                        attributes.currentFilterSlug
-                            ? name ===
-                              theFilters[String(attributes.currentFilterSlug)]
-                            : false
-                    }
+                    current={attributes?.currentFilterSlug ?? ''}
                     imageData={imageData}
                     setImage={setImage}
                     name={name}

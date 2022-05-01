@@ -40,7 +40,7 @@ export const ModalLoader = ({
     // @ts-ignore-next-line - replaceBlock not added as a type?
     const { replaceBlock } = useDispatch(blockEditorStore)
     const handleShow = () => {
-        if (!accept && imageSize && imageSize > 300000) {
+        if (!accept && imageSize && imageSize > 300_000) {
             setShowFileSizeNotice(true)
             return
         }
@@ -86,7 +86,11 @@ export const ModalLoader = ({
             <ConfirmFileSizeNotice
                 open={showFileSizeNotice}
                 onClose={() => setShowFileSizeNotice(false)}
-                accept={() => {
+                onAccept={() => {
+                    setShowFileSizeNotice(false)
+                    setShowFilters(true)
+                }}
+                onAcceptPersist={() => {
                     setAccept(true)
                     setShowFileSizeNotice(false)
                     setShowFilters(true)

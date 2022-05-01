@@ -1,11 +1,13 @@
-import { useRef, useEffect } from '@wordpress/element'
+import { useRef, useEffect, useState } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
+import filtersList from '../filters.json'
 
 type FilteredImageProps = {
     name: string
     imageData: ImageData
-    current: boolean
+    current: string
     setImage: (image: ImageData, filterName: string) => void
 }
 export const FilteredImage = ({
@@ -16,13 +18,22 @@ export const FilteredImage = ({
 }: FilteredImageProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
-    const handleClick = () => setImage(imageData, name)
+    const [importing, setImporting] = useState(false)
+    const theFilters: Record<string, string> = filtersList
+    const thisOneIsCurrent = name === theFilters[String(current)]
+    const thisOneIsFirst = name === Object.values(theFilters)[0]
+    const handleClick = () => {
+        if (importing) return
+        setImporting(true)
+        setImage(imageData, name)
+    }
 
     useEffect(() => {
-        if (current && buttonRef.current) {
+        if (!buttonRef.current) return
+        if (thisOneIsFirst) {
             buttonRef.current.focus()
         }
-    }, [current])
+    }, [current, thisOneIsFirst])
 
     useEffect(() => {
         if (!canvasRef.current) return
@@ -57,8 +68,8 @@ export const FilteredImage = ({
                 ref={buttonRef}
                 style={{ aspectRatio: imageData.width / imageData.height + '' }}
                 className={classNames(
-                    'w-full bg-gray-100 m-0 p-0 flex items-end relative border cursor-pointer ring-offset-2 ring-wp-theme-500 focus:ring-4',
-                    { 'ring-4': current },
+                    'group w-full bg-gray-100 m-0 p-0 flex items-end relative border cursor-pointer ring-offset-2 ring-black ring-offset-white focus:ring-4 outline-none shadow-none',
+                    { 'ring-4': thisOneIsCurrent },
                 )}
                 onClick={handleClick}>
                 <div className="absolute flex inset-0 items-end z-10">
@@ -67,6 +78,13 @@ export const FilteredImage = ({
                     </p>
                 </div>
                 <canvas className="max-w-full block" ref={canvasRef}></canvas>
+                <div className="absolute bg-white flex inset-0 items-center justify-center z-40 opacity-0 group-hover:opacity-80 transition duration-300 ease-in-out">
+                    <span className="bg-black p-2 px-4 font-bold text-sm text-white">
+                        {importing
+                            ? __('Importing...', 'image-filters')
+                            : __('Press to import', 'image-filters')}
+                    </span>
+                </div>
             </button>
         </motion.div>
     )

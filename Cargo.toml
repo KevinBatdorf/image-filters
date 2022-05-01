@@ -1,5 +1,5 @@
 [package]
-name = "image-filters-block"
+name = "image-filters"
 version = "0.1.0"
 edition = "2021"
 

@@ -1,12 +1,12 @@
-.image-filters-block {
+.image-filters {
     --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
     --tw-ring-offset-width: 0px;
     --tw-ring-offset-color: transparent;
     /* --tw-ring-color: you-may-want-to-update-this; */
 }
-.image-filters-block *,
-.image-filters-block *:after,
-.image-filters-block *:before {
+.image-filters *,
+.image-filters *:after,
+.image-filters *:before {
     box-sizing: border-box;
     border: 0 solid #e5e7eb;
 }
