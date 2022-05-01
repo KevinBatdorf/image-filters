@@ -1,7 +1,7 @@
 {
     "name": "image-filters-block",
     "version": "0.1.0",
-    "description": "Apply image filters to the native Image block.",
+    "description": "Apply image filters to the core image block.",
     "author": "Kevin Batdorf",
     "license": "GPL-2.0-or-later",
     "main": "build/index.js",

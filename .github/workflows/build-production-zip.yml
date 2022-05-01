@@ -1,4 +1,4 @@
-name: Build development zip file
+name: Build production zip file
 on: push
 jobs:
     build:
@@ -17,11 +17,13 @@ jobs:
             - name: Package
               uses: actions/upload-artifact@v2
               with:
-                  name: rust-starter
+                  name: image-filters
                   retention-days: 5
                   path: |
                       ${{ github.workspace }}/
                       !${{ github.workspace }}/node_modules/
+                      !${{ github.workspace }}/cypress/
+                      !${{ github.workspace }}/target/
                       !${{ github.workspace }}/.git/
                       !${{ github.workspace }}/.github/
                       !${{ github.workspace }}/.wordpress-org/

@@ -16,9 +16,8 @@ export const useFilteredImages = (
     const [ready, setReady] = useState(false)
     const { canvas, ctx, img, isLoading: canvasLoading } = useCanvas(url)
     const getImages = () => {
-        console.log({ server, url, canvas, ctx, img })
         if (!server || !url || !canvas || !ctx || !img) return
-        console.log(`Procesing ${Object.keys(filters).length} image filters`)
+        console.log(`Processing [${Object.keys(filters)}]`)
         return processImages(filters, server, canvas, ctx, img)
     }
     const { data, error } = useSWRImmutable(ready ? url : null, getImages)

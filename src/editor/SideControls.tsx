@@ -11,21 +11,18 @@ type ControlProps = {
 }
 
 export const SideControls = ({ attributes }: ControlProps) => {
-    const { originalImageId, currentImageId } = attributes
-    const originalImage: WpImage = useSelect((s) =>
-        s('core')?.getMedia(originalImageId),
+    const { sourceImageId, filteredFromImageId } = attributes
+
+    const sourceImage: WpImage = useSelect((s) =>
+        s('core')?.getMedia(filteredFromImageId ?? sourceImageId),
     )
-    const currentImage: WpImage = useSelect((s) =>
-        s('core')?.getMedia(currentImageId),
-    )
-    const hasUpdatedImage = originalImageId !== currentImageId
 
     return (
         <InspectorControls>
             <PanelBody title={__('Details', 'image-filters-block')}>
                 <BaseControl id="image-filter-sources">
                     <div className="image-filters-block-editor">
-                        {originalImage?.source_url ? (
+                        {sourceImage?.source_url ? (
                             <>
                                 <p className="text-xs text-gray-900 mb-2">
                                     {__('Original', 'image-filters-block')}
@@ -34,7 +31,7 @@ export const SideControls = ({ attributes }: ControlProps) => {
                                     <img
                                         className="block"
                                         alt="Original"
-                                        src={originalImage?.source_url}
+                                        src={sourceImage?.source_url}
                                     />
                                 </div>
                             </>
@@ -46,7 +43,12 @@ export const SideControls = ({ attributes }: ControlProps) => {
                                 )}
                             </p>
                         )}
-                        {/* TODO: If updated, show revert button */}
+                    </div>
+                    <div className="bg-gray-100 p-2">
+                        {__(
+                            'To restore the original image, select the image block and press the replace button.',
+                            'image-filters-block',
+                        )}
                     </div>
                 </BaseControl>
             </PanelBody>

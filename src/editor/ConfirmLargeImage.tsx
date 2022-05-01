@@ -3,11 +3,12 @@ import { useRef } from '@wordpress/element'
 import { __, sprintf } from '@wordpress/i18n'
 import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { toHumanBytes } from '../lib/utils'
 import { ModalToolbar } from './ModalToolbar'
 
 type ModalProps = {
     open: boolean
-    size: string
+    size: number
     accept: () => void
     onClose: () => void
 }
@@ -55,7 +56,7 @@ export const ConfirmFileSizeNotice = ({
                                             'Just a heads up! This image (%s) is a little large and may take slightly longer to process.',
                                             'image-filters-block',
                                         ),
-                                        size,
+                                        toHumanBytes(size),
                                     )}
                                 </p>
                                 <div className="flex justify-end">

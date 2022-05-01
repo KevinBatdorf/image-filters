@@ -15,12 +15,13 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters-block', {
     ...blockConfig,
     icon: blockIcon,
     attributes: {
-        originalImageId: { type: 'number' },
+        sourceImageId: { type: 'number' },
         currentImageId: { type: 'number' },
+        currentFilterSlug: { type: 'string' },
+        filteredFromImageId: { type: 'number' },
     },
     title: __('Image Filters', 'image-filters-block'),
     edit: ({ attributes, setAttributes, clientId }) => {
-
         return (
             <>
                 <ModalLoader
@@ -41,7 +42,7 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters-block', {
                         <InnerBlocks
                             template={[['core/image', {}]]}
                             allowedBlocks={['core/image']}
-                            templateLock="all"
+                            // templateLock="all"
                         />
                     </ImageContainer>
                 </div>

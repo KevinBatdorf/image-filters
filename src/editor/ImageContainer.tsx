@@ -1,3 +1,4 @@
+import { store as blockEditorStore } from '@wordpress/block-editor'
 import { useSelect } from '@wordpress/data'
 import { useEffect } from '@wordpress/element'
 import type { Attributes } from '../types'
@@ -16,19 +17,24 @@ export const ImageContainer = ({
     setAttributes,
     children: innerBlock,
 }: ImageContainerProps) => {
-    const { getBlock } = useSelect((s) => s('core/block-editor'))
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore-next-line - replaceBlock not added as a type?
+    const { getBlock } = useSelect((select) => select(blockEditorStore))
     const innerBlockData = getBlock(clientId)?.innerBlocks[0]
-    const originalImageId = innerBlockData?.attributes?.id
-    console.log({ i: innerBlockData?.attributes })
+    const sourceImageId = innerBlockData?.attributes?.id
+
     useEffect(() => {
-        // if no current image is set, this is the first run
-        if (!attributes?.currentImageId) {
-            setAttributes({ ...attributes, currentImageId: originalImageId })
+        if (sourceImageId === attributes.currentImageId) {
+            return
         }
-        // If the current image no
-        if (attributes?.currentImageId !== originalImageId) {
-            setAttributes({ ...attributes, originalImageId })
-        }
-    }, [attributes, originalImageId, setAttributes])
+        // If the source image (which the user can change) doesn't match the current image, basically we need to reset the state.
+        setAttributes({
+            ...attributes,
+            sourceImageId,
+            currentImageId: undefined,
+            currentFilterSlug: undefined,
+            filteredFromImageId: undefined,
+        })
+    }, [sourceImageId, setAttributes, attributes])
     return <div>{innerBlock}</div>
 }

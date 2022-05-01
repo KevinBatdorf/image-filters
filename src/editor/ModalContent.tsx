@@ -1,7 +1,10 @@
-import { useEffect, useState } from '@wordpress/element'
+import { store as blockEditorStore } from '@wordpress/block-editor'
+import { useSelect } from '@wordpress/data'
+import { useEffect, useState, useLayoutEffect } from '@wordpress/element'
 import { sprintf, __ } from '@wordpress/i18n'
 import { AnimatePresence, motion } from 'framer-motion'
 import filters from '../filters.json'
+import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
 import { batch } from '../lib/utils'
 import { Attributes } from '../types'
@@ -9,38 +12,68 @@ import { PageLoader } from './PageLoader'
 
 type ModalContentProps = {
     attributes: Attributes
-    setImage: (image: ImageData) => void
+    setImage: (image: ImageData, filterName: string) => void
     clientId?: string
 }
 
-export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
-    const { originalImageId } = attributes
-    const wpImage = useWpImage(originalImageId)
+export const ModalContent = ({
+    attributes,
+    setImage,
+    clientId,
+}: ModalContentProps) => {
+    const { sourceImageId, filteredFromImageId } = attributes
+    const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
     const batches = batch(filters, 1)
     const [loaded, setLoaded] = useState(0)
+    const [error, setError] = useState('')
     const [loadedFilters, setLoadedFilters] = useState<[string, string][][]>()
+    const isMounted = useIsMounted()
+    const block = useSelect((select) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore-next-line - replaceBlock not added as a type?
+        return select(blockEditorStore).getBlock(clientId ?? '')
+    })
 
     useEffect(() => {
         if (!batches.length) return
         let raf = 0
         if (!loadedFilters || loadedFilters.length < loaded + 1) {
             raf = requestAnimationFrame(() => {
-                // TODO: Check if still mounted
+                if (!isMounted) return
                 setLoadedFilters(batches.slice(0, loaded + 1))
             })
         }
-        return () => cancelAnimationFrame(raf)
-    }, [loaded, batches, loadedFilters])
+        return () => {
+            cancelAnimationFrame(raf)
+        }
+    }, [loaded, batches, loadedFilters, isMounted])
 
-    if (!wpImage?.source_url) {
+    useLayoutEffect(() => {
+        if (block && !block?.innerBlocks[0]) {
+            setError(
+                __(
+                    'No image block found. Image Filters requires an image block in the first position.',
+                    'image-filters-block',
+                ),
+            )
+            return
+        }
+        if (!wpImage?.source_url) {
+            setError(
+                __(
+                    'No image found. Set an image first before applying filters.',
+                    'image-filters-block',
+                ),
+            )
+            return
+        }
+        setError('')
+    }, [wpImage, block])
+
+    if (error) {
         return (
             <div className="flex items-center justify-center h-full w-full">
-                <p className="m-0 p-0 text-md font-bold">
-                    {__(
-                        'No image found. Set an image first before applying filters.',
-                        'image-filters-block',
-                    )}
-                </p>
+                <p className="m-0 p-0 text-md font-bold">{error}</p>
             </div>
         )
     }
@@ -73,6 +106,7 @@ export const ModalContent = ({ attributes, setImage }: ModalContentProps) => {
                         key={batch.toString()}
                         setLoaded={() => setLoaded((loaded) => loaded + 1)}
                         sourceUrl={wpImage.source_url}
+                        attributes={attributes}
                         filters={batch}
                         setImage={setImage}
                     />
