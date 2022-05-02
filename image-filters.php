@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Image Filters
  * Description:       Choose from 22 advanced image filters to bring your images to life. No CSS.
- * Requires at least: 5.8
+ * Requires at least: 5.9
  * Requires PHP:      7.0
  * Version:           1.0.0
  * Author:            Kevin Batdorf
