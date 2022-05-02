@@ -50,10 +50,6 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters', {
         )
     },
     save: () => {
-        return (
-            <div {...blockProps.save()}>
-                <InnerBlocks.Content />
-            </div>
-        )
+        return <InnerBlocks.Content />
     },
 })

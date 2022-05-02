@@ -36,5 +36,5 @@ export const ImageContainer = ({
             filteredFromImageId: undefined,
         })
     }, [sourceImageId, setAttributes, attributes])
-    return <div>{innerBlock}</div>
+    return innerBlock
 }
