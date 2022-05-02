@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, memo } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
+import classnames from 'classnames'
 import { motion } from 'framer-motion'
 import filtersList from '../filters.json'
 import { useFilteredImages } from '../hooks/useFilteredImages'
@@ -100,7 +101,13 @@ export const FilteredImage = memo(function FilteredImage({
                     </p>
                 </div>
                 <canvas className="max-w-full block" ref={canvasRef}></canvas>
-                <div className="absolute bg-white flex inset-0 items-center justify-center z-40 opacity-0 group-hover:opacity-80 transition duration-300 ease-in-out">
+                <div
+                    className={classnames(
+                        'absolute bg-white flex inset-0 items-center justify-center z-40 opacity-0 group-hover:opacity-80 transition duration-300 ease-in-out',
+                        {
+                            'opacity-80': importing,
+                        },
+                    )}>
                     <span className="bg-gray-900 p-2 px-4 font-bold text-sm text-white">
                         {importing
                             ? __('Importing...', 'image-filters')
