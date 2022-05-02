@@ -38,7 +38,7 @@ export const Modal = ({
                     exit={{ opacity: 0 }}
                     open={open}
                     onClose={onClose}>
-                    <div className="absolute mx-auto w-full h-full p-8 lg:p-24">
+                    <div className="absolute mx-auto w-full h-full pt-24 sm:p-8 sm:pt-24 lg:p-24">
                         <Dialog.Overlay className="fixed inset-0 bg-black opacity-40" />
                         <motion.div
                             key="modal"

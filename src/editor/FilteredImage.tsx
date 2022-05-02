@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState, memo } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
-import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import filtersList from '../filters.json'
 import { useFilteredImages } from '../hooks/useFilteredImages'
@@ -89,14 +88,15 @@ export const FilteredImage = memo(function FilteredImage({
             <button
                 ref={buttonRef}
                 style={{ aspectRatio: imageData.width / imageData.height + '' }}
-                className={classNames(
-                    'group w-full bg-gray-100 m-0 p-0 flex items-end relative border cursor-pointer ring-offset-2 ring-gray-900 ring-offset-white focus:ring-4 outline-none shadow-none',
-                    { 'ring-4': thisOneIsCurrent },
-                )}
+                className="group w-full bg-gray-100 m-0 p-0 flex items-end relative border cursor-pointer ring-offset-2 ring-gray-900 ring-offset-white focus:ring-4 outline-none shadow-none"
                 onClick={handleClick}>
                 <div className="absolute flex inset-0 items-end z-10">
-                    <p className="text-xs m-0 p-2 py-0.5 bg-gray-900 text-gray-300">
-                        {name}
+                    <p className="text-xs m-0 p-2 py-0.5 bg-gray-900 text-gray-300 flex space-x-1">
+                        <span>{name}</span>
+                        <span>
+                            {thisOneIsCurrent &&
+                                __('(currently selected)', 'image-filters')}
+                        </span>
                     </p>
                 </div>
                 <canvas className="max-w-full block" ref={canvasRef}></canvas>

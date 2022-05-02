@@ -88,7 +88,7 @@ export const ModalContent = memo(function ModalContent({
 
     return (
         <div className="overflow-y-scroll h-full flex flex-col items-center">
-            <div className="grid w-full grid-cols-4 gap-4 p-4 bg-gray-50">
+            <div className="grid w-full sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 bg-gray-50">
                 {wpImage?.source_url &&
                     generated.map((name) => (
                         <FilteredImage
