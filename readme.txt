@@ -6,7 +6,7 @@ Stable tag:        1.0.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Choose from 22 beautiful filters to bring your images to life.
+Choose from 22 beautiful image filters.
 
 == Description ==
 
@@ -21,7 +21,7 @@ Image filters is a Gutenberg block that wraps around the native core image block
 - Wraps around the core image block, doesn't filter it.
 
 = More coming =
-I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, and more. Open an issue if you have any feature requests, or show support by leavign a review.
+I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, image blending, and more. Open an issue if you have any feature requests, or show support by leavign a review.
 
 == Installation ==
 
