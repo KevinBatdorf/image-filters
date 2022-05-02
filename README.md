@@ -1,8 +1,8 @@
-Choose from 22 advanced image filters to bring your images to life. No CSS.
+Choose from 22 beautiful filters to bring your images to life.
 
-== Description ==
+## Description
 
-Image filters is a Gutenberg block that wraps around the native core image block that when opened, will generate a curated set of 22 image filters processed using the binary code of the image itself (i.e. not a CSS fitler overlay).
+Image filters is a Gutenberg block that wraps around the native core image block that when opened, will generate a curated set of 22 image filters processed using the binary code of the image itself (i.e. not a CSS overlay).
 
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/kevinbatdorf.svg?style=social&label=Follow%20%40kevinbatdorf)](https://twitter.com/kevinbatdorf)
 
