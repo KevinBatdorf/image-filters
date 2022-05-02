@@ -6,9 +6,10 @@ import { useCanvas } from './useCanvas'
 
 export const useFilteredImages = (
     url: string,
-    filters: Record<string, string>,
+    filterName: string,
+    filterSlug: string,
 ): {
-    filteredImageData: Record<string, ImageData>
+    filteredImageData: ImageData | undefined
     isLoading: boolean
     errorMsg: string
 } => {
@@ -17,8 +18,8 @@ export const useFilteredImages = (
     const { canvas, ctx, img, isLoading: canvasLoading } = useCanvas(url)
     const getImages = () => {
         if (!server || !url || !canvas || !ctx || !img) return
-        console.log(`Processing [${Object.keys(filters)}]`)
-        return processImages(filters, server, canvas, ctx, img)
+        console.log(`Processing filter [${filterName}]`)
+        return processImages(filterSlug, server, canvas, ctx, img)
     }
     const { data, error } = useSWRImmutable(ready ? url : null, getImages)
 

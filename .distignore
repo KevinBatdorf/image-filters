@@ -2,4 +2,6 @@
 /.git
 /.github
 /node_modules
+/scripts
+/target
 /assets

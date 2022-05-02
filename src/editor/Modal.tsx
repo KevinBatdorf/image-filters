@@ -62,7 +62,7 @@ export const Modal = ({
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0, bottom: '-40px' }}
                                         transition={{ duration: 0.5 }}
-                                        className="bg-white flex justify-start w-full p-2 shadow-lg absolute bottom-0 z-40 border-t border-gray-100">
+                                        className="bg-white flex justify-start w-full p-2 py-1 shadow-lg absolute bottom-0 z-40 border-t border-gray-100">
                                         <p className="m-0 p-0 text-md font-bold">
                                             {infoMessage}
                                         </p>

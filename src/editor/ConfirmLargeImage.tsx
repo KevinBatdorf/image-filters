@@ -44,14 +44,16 @@ export const ConfirmFileSizeNotice = ({
                     exit={{ opacity: 0 }}
                     open={open}
                     onClose={onClose}>
-                    <div className="absolute mx-auto w-full h-full flex items-center justify-center p-8">
+                    <div
+                        style={{ minWidth: 400 }}
+                        className="absolute mx-auto w-full h-full flex items-center justify-center p-8">
                         <Dialog.Overlay className="fixed inset-0 bg-black opacity-40" />
                         <motion.div
                             key="modal"
                             initial={{ y: 30 }}
                             animate={{ y: 0 }}
                             exit={{ y: 0, opacity: 0 }}
-                            className="relative shadow-lg overflow-hidden w-96 max-w-full">
+                            className="relative shadow-lg overflow-hidden max-w-full">
                             <ModalToolbar
                                 onClose={onClose}
                                 title={__(
@@ -60,20 +62,20 @@ export const ConfirmFileSizeNotice = ({
                                 )}
                             />
                             <div className="p-4 bg-gray-50">
-                                <p className="text-base">
+                                <p className="text-base max-w-sm">
                                     {sprintf(
                                         __(
-                                            'Just a heads up! This image (%s) is a little large and may take slightly longer to generate.',
+                                            'Just a heads up! This image is a little large (%s) and may take slightly longer to generate.',
                                             'image-filters',
                                         ),
                                         toHumanBytes(size),
                                     )}
                                 </p>
-                                <div className="flex justify-between items-center space-x-2">
+                                <div className="flex justify-between items-center space-x-4">
                                     <CheckboxControl
                                         className="checkbox-control-mb-0"
                                         label={__(
-                                            'Always for this image',
+                                            'Always allow for this image',
                                             'image-filters',
                                         )}
                                         checked={always}

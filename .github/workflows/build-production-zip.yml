@@ -22,6 +22,7 @@ jobs:
                   path: |
                       ${{ github.workspace }}/
                       !${{ github.workspace }}/node_modules/
+                      !${{ github.workspace }}/scripts/
                       !${{ github.workspace }}/cypress/
                       !${{ github.workspace }}/target/
                       !${{ github.workspace }}/.git/

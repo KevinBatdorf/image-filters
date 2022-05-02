@@ -1,20 +1,13 @@
 import { store as blockEditorStore } from '@wordpress/block-editor'
 import { useSelect } from '@wordpress/data'
-import {
-    useEffect,
-    useState,
-    useLayoutEffect,
-    useMemo,
-    memo,
-} from '@wordpress/element'
+import { useEffect, useState, useLayoutEffect, memo } from '@wordpress/element'
 import { sprintf, __ } from '@wordpress/i18n'
 import { motion } from 'framer-motion'
-import filters from '../filters.json'
+import filtersList from '../filters.json'
 import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
-import { batch } from '../lib/utils'
 import { Attributes } from '../types'
-import { PageLoader } from './PageLoader'
+import { FilteredImage } from './FilteredImage'
 
 type ModalContentProps = {
     attributes: Attributes
@@ -31,10 +24,8 @@ export const ModalContent = memo(function ModalContent({
 }: ModalContentProps) {
     const { sourceImageId, filteredFromImageId } = attributes
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
-    const batches = useMemo(() => batch(filters, 1), [])
-    const [loaded, setLoaded] = useState(0)
     const [errorMessage, setErrorMessage] = useState('')
-    const [loadedFilters, setLoadedFilters] = useState<[string, string][][]>()
+    const [generated, setGenerated] = useState<string[]>([])
     const isMounted = useIsMounted()
     const block = useSelect((select) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -43,32 +34,27 @@ export const ModalContent = memo(function ModalContent({
     })
 
     useEffect(() => {
-        if (!batches.length) return
-        let raf = 0
-        if (!loadedFilters || loadedFilters.length < loaded + 1) {
-            raf = requestAnimationFrame(() => {
-                if (!isMounted) return
-                setLoadedFilters(batches.slice(0, loaded + 1))
-                setInfoMessage(getInfoMessage(loaded, batches))
-            })
-            return () => {
-                cancelAnimationFrame(raf)
-            }
-        }
-    }, [loaded, batches, loadedFilters, isMounted, setInfoMessage])
+        if (!wpImage?.source_url) return
+        // Set the first one to start generating
+        setGenerated([Object.values(filtersList)[0]])
+    }, [wpImage])
+
+    useEffect(() => {
+        setInfoMessage(getInfoMessage(generated.length))
+    }, [generated, setInfoMessage])
 
     useEffect(() => {
         const id = setTimeout(() => {
-            if (!isMounted || loaded >= batches.length) return
-            setInfoMessage(
-                __(
-                    'Filter generating stuck? Try closing and reopening the modal.',
-                    'image-filters',
-                ),
+            if (!isMounted) return
+            if (generated.length === Object.keys(filtersList).length) return
+            const message = __(
+                'Filter generating stuck? Try closing and reopening the modal.',
+                'image-filters',
             )
+            setInfoMessage(message)
         }, 25_000)
         return () => clearTimeout(id)
-    }, [loadedFilters, isMounted, loaded, batches.length, setInfoMessage])
+    }, [generated, isMounted, setInfoMessage])
 
     useLayoutEffect(() => {
         if (block && !block?.innerBlocks[0]) {
@@ -103,18 +89,27 @@ export const ModalContent = memo(function ModalContent({
     return (
         <div className="overflow-y-scroll h-full flex flex-col items-center">
             <div className="grid w-full grid-cols-4 gap-4 p-4 bg-gray-50">
-                {loadedFilters?.map((batch) => (
-                    <PageLoader
-                        key={batch.toString()}
-                        setLoaded={() => setLoaded((loaded) => loaded + 1)}
-                        sourceUrl={wpImage?.source_url ?? ''}
-                        attributes={attributes}
-                        filters={batch}
-                        setImage={setImage}
-                    />
-                ))}
-                {Object.keys(filters)
-                    .slice(loaded)
+                {wpImage?.source_url &&
+                    generated.map((name) => (
+                        <FilteredImage
+                            key={name}
+                            name={name}
+                            sourceUrl={wpImage.source_url}
+                            setLoaded={() => {
+                                const filtersV = Object.values(filtersList)
+                                if (filtersV.length === generated.length) return
+                                if (isMounted) {
+                                    const nextFilter =
+                                        filtersV[generated?.length]
+                                    setGenerated([...generated, nextFilter])
+                                }
+                            }}
+                            currentFilter={attributes.currentFilterSlug ?? ''}
+                            setImage={setImage}
+                        />
+                    ))}
+                {Object.keys(filtersList)
+                    .slice(generated.length)
                     .map((_, i, all) => {
                         const opacity =
                             all.length / (Math.max(i, all.length / 2) + 1) - 1
@@ -125,8 +120,7 @@ export const ModalContent = memo(function ModalContent({
                               )
                             : undefined
                         return (
-                            <motion.div
-                                layout
+                            <div
                                 style={{
                                     aspectRatio,
                                     opacity,
@@ -145,13 +139,13 @@ export const ModalContent = memo(function ModalContent({
     )
 })
 
-const getInfoMessage = (loaded: number, batches: [string, string][][]) => {
-    if (loaded >= batches.length) {
+const getInfoMessage = (loaded: number) => {
+    if (loaded === Object.keys(filtersList).length) {
         return ''
     }
     return sprintf(
         __('Generating %1$s of %2$s filters...', 'image-filters'),
-        loaded + 1,
-        Object.keys(filters).length,
+        loaded,
+        Object.keys(filtersList).length,
     )
 }

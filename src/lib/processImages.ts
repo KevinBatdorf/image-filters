@@ -7,22 +7,17 @@ export const loadImage = (img: HTMLImageElement) => {
 }
 
 export const processImages = (
-    filters: Record<string, string>,
+    filterSlug: string,
     server: Server,
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
     img: HTMLImageElement,
 ) => {
-    const filteredImages = new Map()
-    for (const [filter, name] of Object.entries(filters)) {
-        ctx.drawImage(img, 0, 0)
-        const photonImage = server.open_image(canvas, ctx)
-        server.filter(photonImage, filter)
-        server.putImageData(canvas, ctx, photonImage)
-        const imageData = server.get_image_data(canvas, ctx)
-        filteredImages.set(name, imageData)
-    }
-    return Object.fromEntries(filteredImages)
+    ctx.drawImage(img, 0, 0)
+    const photonImage = server.open_image(canvas, ctx)
+    server.filter(photonImage, filterSlug)
+    server.putImageData(canvas, ctx, photonImage)
+    return server.get_image_data(canvas, ctx)
 }
 
 export const uploadImage = async (

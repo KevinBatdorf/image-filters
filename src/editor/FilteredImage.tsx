@@ -1,42 +1,64 @@
-import { useRef, useEffect, useState } from '@wordpress/element'
+import { useRef, useEffect, useState, memo } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import filtersList from '../filters.json'
+import { useFilteredImages } from '../hooks/useFilteredImages'
 
 type FilteredImageProps = {
     name: string
-    imageData: ImageData
-    current: string
+    currentFilter: string
+    sourceUrl: string
+    setLoaded: () => void
     setImage: (image: ImageData, filterName: string) => void
 }
-export const FilteredImage = ({
+export const FilteredImage = memo(function FilteredImage({
     name,
-    imageData,
+    currentFilter,
+    setLoaded,
+    sourceUrl,
     setImage,
-    current,
-}: FilteredImageProps) => {
+}: FilteredImageProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
     const [importing, setImporting] = useState(false)
     const theFilters: Record<string, string> = filtersList
-    const thisOneIsCurrent = name === theFilters[String(current)]
+    const thisOneIsCurrent = name === theFilters[String(currentFilter)]
     const thisOneIsFirst = name === Object.values(theFilters)[0]
+    const once = useRef(false)
+    const filtersByValue = Object.fromEntries(
+        Object.entries(filtersList).map((i) => i.reverse()),
+    )
+    const { filteredImageData: imageData } = useFilteredImages(
+        `${sourceUrl}?filters=${name}`,
+        name,
+        filtersByValue[name],
+    )
+
     const handleClick = () => {
-        if (importing) return
+        if (importing || !imageData) return
         setImporting(true)
         setImage(imageData, name)
     }
+
+    useEffect(() => {
+        if (imageData?.data?.length && !once.current) {
+            once.current = true
+            // Without this the window locks in mid animation
+            const raf = requestAnimationFrame(() => setLoaded())
+            return () => cancelAnimationFrame(raf)
+        }
+    }, [imageData, setLoaded, name])
 
     useEffect(() => {
         if (!buttonRef.current) return
         if (thisOneIsFirst) {
             buttonRef.current.focus()
         }
-    }, [current, thisOneIsFirst])
+    }, [currentFilter, thisOneIsFirst, imageData])
 
     useEffect(() => {
-        if (!canvasRef.current) return
+        if (!canvasRef.current || !imageData) return
         canvasRef.current.width = imageData.width
         canvasRef.current.height = imageData.height
         const ctx = canvasRef.current.getContext('2d')
@@ -53,7 +75,7 @@ export const FilteredImage = ({
         }
     }, [imageData])
 
-    if (!imageData.data.length) {
+    if (!imageData?.data?.length) {
         return null
     }
 
@@ -68,7 +90,7 @@ export const FilteredImage = ({
                 ref={buttonRef}
                 style={{ aspectRatio: imageData.width / imageData.height + '' }}
                 className={classNames(
-                    'group w-full bg-gray-100 m-0 p-0 flex items-end relative border cursor-pointer ring-offset-2 ring-black ring-offset-white focus:ring-4 outline-none shadow-none',
+                    'group w-full bg-gray-100 m-0 p-0 flex items-end relative border cursor-pointer ring-offset-2 ring-gray-900 ring-offset-white focus:ring-4 outline-none shadow-none',
                     { 'ring-4': thisOneIsCurrent },
                 )}
                 onClick={handleClick}>
@@ -79,7 +101,7 @@ export const FilteredImage = ({
                 </div>
                 <canvas className="max-w-full block" ref={canvasRef}></canvas>
                 <div className="absolute bg-white flex inset-0 items-center justify-center z-40 opacity-0 group-hover:opacity-80 transition duration-300 ease-in-out">
-                    <span className="bg-black p-2 px-4 font-bold text-sm text-white">
+                    <span className="bg-gray-900 p-2 px-4 font-bold text-sm text-white">
                         {importing
                             ? __('Importing...', 'image-filters')
                             : __('Press to import', 'image-filters')}
@@ -88,4 +110,4 @@ export const FilteredImage = ({
             </button>
         </motion.div>
     )
-}
+})
