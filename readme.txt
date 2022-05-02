@@ -12,18 +12,26 @@ Choose from 22 advanced image filters to bring your images to life. No CSS.
 
 Image filters is a Gutenberg block that wraps around the native core image block that when opened, will generate a curated set of 22 image filters processed using the binary code of the image itself (i.e. not a CSS fitler overlay).
 
+- Follow [@kevinbatdorf](https://twitter.com/kevinbatdorf) on Twitter
+- View on [GitHub](https://github.com/KevinBatdorf/image-filters)
+
 = Features =
 - No server requirements.
 - Clones the source image and saves it to the media library.
 - Wraps around the core image block, doesn't filter it.
 
+= Tips =
+- While it's not required, you can speed up the filter processing by making sure your server understands application/wasm files and serves them with the proper mime type. In Nginx, for example, you would add a directive like:
+`types {
+    application/wasm wasm;
+}`
+
 = More coming =
-I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, and more. Open an issue if you have any feature requests.
+I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, and more. Open an issue if you have any feature requests, or show support by leavign a review.
 
 == Installation ==
 
 1. Activate the plugin through the 'Plugins' screen in WordPress
-
 
 == Frequently Asked Questions ==
 
