@@ -2,7 +2,6 @@ import { store as blockEditorStore } from '@wordpress/block-editor'
 import { useSelect } from '@wordpress/data'
 import { useEffect, useState, useLayoutEffect, memo } from '@wordpress/element'
 import { sprintf, __ } from '@wordpress/i18n'
-import { motion } from 'framer-motion'
 import filtersList from '../filters.json'
 import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
@@ -42,19 +41,6 @@ export const ModalContent = memo(function ModalContent({
     useEffect(() => {
         setInfoMessage(getInfoMessage(generated.length))
     }, [generated, setInfoMessage])
-
-    useEffect(() => {
-        const id = setTimeout(() => {
-            if (!isMounted) return
-            if (generated.length === Object.keys(filtersList).length) return
-            const message = __(
-                'Filter generating stuck? Try closing and reopening the modal.',
-                'image-filters',
-            )
-            setInfoMessage(message)
-        }, 25_000)
-        return () => clearTimeout(id)
-    }, [generated, isMounted, setInfoMessage])
 
     useLayoutEffect(() => {
         if (block && !block?.innerBlocks[0]) {

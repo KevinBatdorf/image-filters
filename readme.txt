@@ -1,6 +1,6 @@
 === Image Filters ===
 Contributors:      kbat82
-Tags:              block
+Tags:              filter, image, block, dramatic, lofi
 Tested up to:      5.9
 Stable tag:        1.0.0
 License:           GPL-2.0-or-later
@@ -19,12 +19,6 @@ Image filters is a Gutenberg block that wraps around the native core image block
 - No server requirements.
 - Clones the source image and saves it to the media library.
 - Wraps around the core image block, doesn't filter it.
-
-= Tips =
-- While it's not required, you can speed up the filter processing by making sure your server understands application/wasm files and serves them with the proper mime type. In Nginx, for example, you would add a directive like:
-`types {
-    application/wasm wasm;
-}`
 
 = More coming =
 I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, and more. Open an issue if you have any feature requests, or show support by leavign a review.
@@ -46,6 +40,13 @@ You will still have the edited image, which you can use however you like.
 = My browser seems locked up? =
 
 When processing a large or complex image, the browser may lock up during a single filter process. If you close the modal (even if you just press the x button while it's locked or press escape), it will safely stop after that single filter has completed. You can open/close the modal at any time without concern and previous filters are cached until reload.
+
+= wasmWebAssembly.instantiateStreaming console message =
+
+While it's not required, you can speed up the filter processing by making sure your server understands application/wasm files and serves them with the proper mime type. In Nginx, for example, you would add a directive like:
+`types {
+    application/wasm wasm;
+}`
 
 == Screenshots ==
 
