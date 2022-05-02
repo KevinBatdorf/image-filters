@@ -52,7 +52,6 @@ While it's not required, you can speed up the filter processing by making sure y
 
 1. An example showing the filtered images
 2. An example showing the filtered images
-3. An example showing the filtered images
 
 
 == Changelog ==
