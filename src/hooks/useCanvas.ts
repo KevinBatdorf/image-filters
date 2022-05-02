@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef } from '@wordpress/element'
+import { useEffect, useState } from '@wordpress/element'
 import { loadImage } from '../lib/processImages'
 
 export const useCanvas = (imageUrl: string) => {
     const [img, setImg] = useState<HTMLImageElement>()
-    const canvas = useRef<HTMLCanvasElement>()
-    const ctx = useRef<CanvasRenderingContext2D>()
+    const [canvas, setCanvas] = useState<HTMLCanvasElement>()
+    const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
     useEffect(() => {
         const img = new Image()
@@ -19,20 +19,20 @@ export const useCanvas = (imageUrl: string) => {
         const c = document.createElement('canvas')
         c.width = img.width
         c.height = img.height
-        canvas.current = c
+        setCanvas(c)
         return () => c.remove()
     }, [img])
 
     useEffect(() => {
-        if (!canvas?.current || !img) return
-        const c = canvas?.current?.getContext('2d') ?? undefined
-        ctx.current = c
+        if (!canvas || !img) return
+        const c = canvas?.getContext('2d') ?? undefined
+        setCtx(c)
     }, [canvas, img])
 
     return {
-        canvas: canvas.current,
-        ctx: ctx.current,
+        canvas,
+        ctx,
         img,
-        isLoading: !canvas.current || !ctx.current || !img,
+        isLoading: !canvas || !ctx || !img,
     }
 }

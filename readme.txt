@@ -6,11 +6,19 @@ Stable tag:        0.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Apply image filters to the core image block.
+Choose from 22 advanced image filters to bring your images to life. No CSS.
 
 == Description ==
 
-TODO
+Image filters is a Gutenberg block that wraps around the native core image block that when opened, will generate a curated set of 22 image filters processed using the binary code of the image itself (i.e. not a CSS fitler overlay).
+
+= Features =
+- No server requirements.
+- Clones the source image and saves it to the media library.
+- Wraps around the core image block, doesn't filter it.
+
+= More coming =
+I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, and more. Open an issue if you have any feature requests.
 
 == Installation ==
 
@@ -21,7 +29,7 @@ TODO
 
 = Do you save the images to my file system? =
 
-Yes, when you select an image filter, the new image will be added to the WP media library.
+Yes, when you press to import an image filter, the new image will be added to the WP media library.
 
 = What happens if I disable your block? =
 
@@ -29,19 +37,7 @@ You will still have the edited image, which you can use however you like.
 
 = My browser seems locked up? =
 
-When processing a very large image, the browser may lock up during a single filter process. If you close the modal (even if you just press the button while it's locked), it will safely stop after that image has completed. You can open/close the modal at any time without concern.
-
-= It seems slow or stuck =
-
-If it seems stuck, just close the modal and reopen it. I've tried to strike a balance between aggressive loading vs loading on demand, so it should only use resources when you want to. If you clsoe the modal and open it back up, the previous images will be cached until you reload the page. If it's just slow, the image may be pretty large or complex. These filters are manipulating the actual image and not just placing a filter over top. Either wait a bit, or try closing/reopening to trigger a restart on a stalled filter.
-
-= Can I filter an already filtered image? =
-
-Sure, but it involves a couple steps. We keep track of the source image until it's changed from the image block, so if you swap an image then open the modal again, it will use the source image to build the filters. You will just need to remove the image and add it back again.
-
-= The filters all look the same! =
-
-It just depends on the image, I guess. I've noticed this too with some images. It is what it is. I hope you enjoy the plugin with other images at least!
+When processing a large or complex image, the browser may lock up during a single filter process. If you close the modal (even if you just press the x button while it's locked or press escape), it will safely stop after that single filter has completed. You can open/close the modal at any time without concern and previous filters are cached until reload.
 
 == Screenshots ==
 

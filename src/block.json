@@ -5,7 +5,7 @@
     "version": "0.1.0",
     "title": "Image Filters",
     "category": "media",
-    "description": "Apply image filters to the core image block.",
+    "description": "Apply 22 image filters to the core image block.",
     "attributes": {
         "sourceImageId": { "type": "number" },
         "currentImageId": { "type": "number" },

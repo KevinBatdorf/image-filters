@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Image Filters
- * Description:       A blcok that wraps the image block and lets you apply filters to it.
+ * Description:       Choose from 22 advanced image filters to bring your images to life. No CSS.
  * Requires at least: 5.8
  * Requires PHP:      7.0
  * Version:           0.1.0
@@ -16,11 +16,3 @@
 add_action('init', function () {
     register_block_type(__DIR__ . '/build');
 });
-function custom_upload_mimes($existing_mimes)
-{
-    $existing_mimes['wasm'] = 'application/wasm';
-
-    return $existing_mimes;
-}
-
-add_filter('upload_mimes', 'custom_upload_mimes');

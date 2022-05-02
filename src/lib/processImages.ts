@@ -20,6 +20,8 @@ export const processImages = (
     return server.get_image_data(canvas, ctx)
 }
 
+// TODO: should we clone more attributes e.g. from other blocks?
+// Maybe clone all except the ones we can't (id, date, etc)
 export const uploadImage = async (
     image: ImageData,
     imageToClone: WpImage,
