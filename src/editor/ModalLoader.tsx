@@ -40,7 +40,7 @@ export const ModalLoader = ({
     // @ts-ignore-next-line - replaceBlock not added as a type?
     const { replaceBlock } = useDispatch(blockEditorStore)
     const handleShow = () => {
-        if (!accept && imageSize && imageSize > 300_000) {
+        if (!accept && imageSize && imageSize > 1_000_000) {
             setShowFileSizeNotice(true)
             return
         }
