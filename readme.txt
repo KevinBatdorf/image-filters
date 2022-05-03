@@ -56,5 +56,8 @@ While it's not required, you can speed up the filter processing by making sure y
 
 == Changelog ==
 
+= 1.0.1 =
+* Add a sidebar preview max width on FSE page
+
 = 1.0.0 =
 * Initial Release
