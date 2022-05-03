@@ -29,7 +29,7 @@ export const SideControls = ({ attributes }: ControlProps) => {
                                 </p>
                                 <div className="bg-gray-200 mb-4">
                                     <img
-                                        className="block"
+                                        className="block max-w-full"
                                         alt="Original"
                                         src={sourceImage?.source_url}
                                     />
@@ -43,12 +43,12 @@ export const SideControls = ({ attributes }: ControlProps) => {
                                 )}
                             </p>
                         )}
-                    </div>
-                    <div className="bg-gray-100 p-2">
-                        {__(
-                            'To restore the original image, select the image block and press the replace button.',
-                            'image-filters',
-                        )}
+                        <div className="bg-gray-100 p-2">
+                            {__(
+                                'To restore the original image, select the image block and press the replace button.',
+                                'image-filters',
+                            )}
+                        </div>
                     </div>
                 </BaseControl>
             </PanelBody>
