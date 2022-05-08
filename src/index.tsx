@@ -21,12 +21,8 @@ registerBlockType<AttributesDeprecated>('kevinbatdorf/image-filters', {
         filteredFromImageId: { type: 'number' },
     },
     title: __('Image Filters', 'image-filters'),
-    edit: ({ clientId }) => {
-        return <BlockReplacer clientId={clientId} />
-    },
-    save: () => {
-        return <InnerBlocks.Content />
-    },
+    edit: ({ clientId }) => <BlockReplacer clientId={clientId} />,
+    save: () => <InnerBlocks.Content />,
 })
 
 // Add to the core image block
@@ -40,7 +36,6 @@ addFilter('editor.BlockEdit', blockConfig.name, (CurrentMenuItems) =>
 // Add our attributes
 addFilter('blocks.registerBlockType', blockConfig.name, (settings) => {
     if (settings.name !== 'core/image') return settings
-    console.log({ settings })
     return {
         ...settings,
         attributes: {

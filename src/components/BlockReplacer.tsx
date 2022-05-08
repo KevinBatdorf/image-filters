@@ -17,7 +17,8 @@ export const BlockReplacer = ({ clientId }: { clientId: string }) => {
     useEffect(() => {
         if (!block?.name || !replaceBlock || !clientId) return
         if (block.innerBlocks[0]) {
-            replaceBlock(clientId, [block.innerBlocks[0]])
+            console.log(block.innerBlocks[0])
+            // replaceBlock(clientId, [block.innerBlocks[0]])
             return
         }
         const blockData = createBlock('core/image')

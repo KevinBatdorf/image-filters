@@ -12,19 +12,7 @@ export const BlockFilter = (props: any) => {
             // @ts-ignore-next-line - getBlock not added as a type?
             const currentBlock = select(blockEditorStore).getBlock(clientId)
             // only show on core image blocks for now
-            if (currentBlock.name !== 'core/image') return false
-            const parentId =
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore-next-line - getBlockParents not added as a type?
-                select(blockEditorStore).getBlockParents(clientId)
-            // If there is no parent, nothing else to check
-            if (!parentId?.length) return true
-            const parentBlock =
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore-next-line - getBlockParents not added as a type?
-                select(blockEditorStore).getBlock(parentId)
-            // Only if the parent block is not our main block
-            return parentBlock?.name !== 'kevinbatdorf/image-filters'
+            return currentBlock.name === 'core/image'
         },
         [clientId],
     )

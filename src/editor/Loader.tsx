@@ -70,7 +70,6 @@ export const Loader = ({
     useEffect(() => {
         const namespace = 'kevinbatdorf/open-image-filters'
         const open = (event: CustomEvent<{ clientId: string }>) => {
-            console.log('tri')
             if (event?.detail?.clientId !== clientId) return
             setShowFilters(true)
         }
