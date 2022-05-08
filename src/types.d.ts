@@ -1,8 +1,17 @@
-export type Attributes = {
-    sourceImageId: number | undefined
-    currentImageId: number | undefined
-    currentFilterSlug: string | undefined
-    filteredFromImageId: number | undefined
+// Adding atributes here could cause conflicts with other blocks
+export type Attributes = ImageLike & {
+    imageFilters: {
+        sourceImageId: number | undefined
+        currentImageId: number | undefined
+        currentFilterSlug: string | undefined
+        filteredFromImageId: number | undefined
+    }
+}
+export type ImageLike = {
+    alt: string
+    caption: string
+    id: number
+    url: string
 }
 export type WpImage = {
     id: number
@@ -21,3 +30,10 @@ export type WpImage = {
     status: string
 }
 export type PhotonImage = T
+
+export type AttributesDeprecated = {
+    sourceImageId: number | undefined
+    currentImageId: number | undefined
+    currentFilterSlug: string | undefined
+    filteredFromImageId: number | undefined
+}

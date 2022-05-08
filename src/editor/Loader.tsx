@@ -1,7 +1,5 @@
-import { store as blockEditorStore } from '@wordpress/block-editor'
-import { createBlock } from '@wordpress/blocks'
-import { useSelect, useDispatch } from '@wordpress/data'
 import { useEffect, useState } from '@wordpress/element'
+import type { Component } from '@wordpress/element'
 import filters from '../filters.json'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useWpImage } from '../hooks/useWpImage'
@@ -9,36 +7,33 @@ import { uploadImage } from '../lib/processImages'
 import type { Attributes, WpImage } from '../types'
 import { ConfirmFileSizeNotice } from './ConfirmLargeImage'
 import { Modal } from './Modal'
-import { ToolbarControls } from './ToolbarControls'
+import { ToolbarControls, ToolbarControlsProps } from './ToolbarControls'
 
-type ModalLoaderProps = {
+type LoaderProps = {
     attributes: Attributes
     setAttributes: (attributes: Attributes) => void
     clientId?: string
+    CurrentMenuItems?: typeof Component
+    toolbarProps?: ToolbarControlsProps
 }
 
-export const ModalLoader = ({
+export const Loader = ({
     attributes,
     setAttributes,
     clientId,
-}: ModalLoaderProps) => {
+    CurrentMenuItems,
+    toolbarProps,
+}: LoaderProps) => {
     const [showFilters, setShowFilters] = useState(false)
     const [showFileSizeNotice, setShowFileSizeNotice] = useState(false)
     const [imageSize, setImageSize] = useState(0)
-    const { sourceImageId, filteredFromImageId } = attributes
+    const sourceImageId = attributes?.imageFilters?.sourceImageId
+    const filteredFromImageId = attributes?.imageFilters?.filteredFromImageId
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
     const [accept, setAccept] = useLocalStorage(
         `ifb-large-image-accept-${sourceImageId}`,
         false,
     )
-    const block = useSelect((select) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore-next-line - replaceBlock not added as a type?
-        return select(blockEditorStore).getBlock(clientId ?? '')
-    })
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore-next-line - replaceBlock not added as a type?
-    const { replaceBlock } = useDispatch(blockEditorStore)
     const handleShow = () => {
         if (!accept && imageSize && imageSize > 1_000_000) {
             setShowFileSizeNotice(true)
@@ -51,25 +46,54 @@ export const ModalLoader = ({
         if (!wpImage) return
         const newImage: WpImage | undefined = await uploadImage(image, wpImage)
         if (!newImage) return
-        const newBlock = createBlock('core/image', {
-            id: newImage.id,
-            caption: newImage.caption.raw,
-            url: newImage.source_url,
-            alt: newImage.alt_text,
-        })
-        await replaceBlock(block.innerBlocks[0].clientId, [newBlock])
-        setShowFilters(false)
+
         const filtersByValue = Object.fromEntries(
             Object.entries(filters).map((i) => i.reverse()),
         )
         setAttributes({
-            sourceImageId: newImage.id,
-            currentImageId: newImage.id,
-            currentFilterSlug: filtersByValue[filterName],
-            filteredFromImageId:
-                attributes?.filteredFromImageId ?? attributes.sourceImageId,
+            id: newImage.id,
+            caption: newImage.caption.raw,
+            url: newImage.source_url,
+            alt: newImage.alt_text,
+            imageFilters: {
+                sourceImageId: newImage.id,
+                currentImageId: newImage.id,
+                currentFilterSlug: filtersByValue[filterName],
+                filteredFromImageId:
+                    attributes?.imageFilters?.filteredFromImageId ??
+                    attributes.imageFilters.sourceImageId,
+            },
         })
+        setShowFilters(false)
     }
+
+    useEffect(() => {
+        const namespace = 'kevinbatdorf/open-image-filters'
+        const open = (event: CustomEvent<{ clientId: string }>) => {
+            if (event?.detail?.clientId !== clientId) return
+            setShowFilters(true)
+        }
+        window.addEventListener(namespace, open as (e: Event) => void)
+        return () => {
+            window.removeEventListener(namespace, open as (e: Event) => void)
+        }
+    }, [clientId])
+
+    useEffect(() => {
+        console.log({ attributes })
+        if (!attributes?.imageFilters?.currentImageId) return
+        if (attributes.id === attributes?.imageFilters?.currentImageId) return
+        // If the source image (which the user can change) doesn't match the current image, basically we need to reset the state.
+        setAttributes({
+            ...attributes,
+            imageFilters: {
+                sourceImageId: Number(attributes.id),
+                currentImageId: undefined,
+                currentFilterSlug: undefined,
+                filteredFromImageId: undefined,
+            },
+        })
+    }, [setAttributes, attributes])
 
     useEffect(() => {
         if (!wpImage) return
@@ -82,7 +106,12 @@ export const ModalLoader = ({
 
     return (
         <>
-            <ToolbarControls openFilters={handleShow} />
+            <ToolbarControls
+                clientId={clientId}
+                CurrentMenuItems={CurrentMenuItems}
+                toolbarProps={toolbarProps}
+                openFilters={handleShow}
+            />
             <ConfirmFileSizeNotice
                 open={showFileSizeNotice}
                 onClose={() => setShowFileSizeNotice(false)}
@@ -99,6 +128,7 @@ export const ModalLoader = ({
             />
             <Modal
                 attributes={attributes}
+                // blockType={block.name}
                 clientId={clientId}
                 setAttributes={setAttributes}
                 open={showFilters}

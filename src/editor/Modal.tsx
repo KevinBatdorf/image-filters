@@ -2,7 +2,7 @@ import { useRef, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import type { Attributes } from '../types'
+import { Attributes } from '../types'
 import { ModalContent } from './ModalContent'
 import { ModalToolbar } from './ModalToolbar'
 

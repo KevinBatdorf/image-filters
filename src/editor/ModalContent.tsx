@@ -21,16 +21,20 @@ export const ModalContent = memo(function ModalContent({
     setInfoMessage,
     clientId,
 }: ModalContentProps) {
-    const { sourceImageId, filteredFromImageId } = attributes
+    const sourceImageId = attributes?.imageFilters?.sourceImageId
+    const filteredFromImageId = attributes?.imageFilters?.filteredFromImageId
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
     const [errorMessage, setErrorMessage] = useState('')
     const [generated, setGenerated] = useState<string[]>([])
     const isMounted = useIsMounted()
-    const block = useSelect((select) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore-next-line - replaceBlock not added as a type?
-        return select(blockEditorStore).getBlock(clientId ?? '')
-    })
+    const block = useSelect(
+        (select) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore-next-line - replaceBlock not added as a type?
+            return select(blockEditorStore).getBlock(clientId ?? '')
+        },
+        [clientId],
+    )
 
     useEffect(() => {
         if (!wpImage?.source_url) return
@@ -43,15 +47,6 @@ export const ModalContent = memo(function ModalContent({
     }, [generated, setInfoMessage])
 
     useLayoutEffect(() => {
-        if (block && !block?.innerBlocks[0]) {
-            setErrorMessage(
-                __(
-                    'No image block found. Image Filters requires an image block in the first position.',
-                    'image-filters',
-                ),
-            )
-            return
-        }
         if (!wpImage?.source_url) {
             setErrorMessage(
                 __(
@@ -90,7 +85,10 @@ export const ModalContent = memo(function ModalContent({
                                     setGenerated([...generated, nextFilter])
                                 }
                             }}
-                            currentFilter={attributes.currentFilterSlug ?? ''}
+                            currentFilter={
+                                attributes?.imageFilters?.currentFilterSlug ??
+                                ''
+                            }
                             setImage={setImage}
                         />
                     ))}

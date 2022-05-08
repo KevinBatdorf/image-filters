@@ -1,17 +1,17 @@
-import {
-    InnerBlocks,
-    useBlockProps as blockProps,
-} from '@wordpress/block-editor'
+import { InnerBlocks } from '@wordpress/block-editor'
 import { registerBlockType } from '@wordpress/blocks'
+import { addFilter } from '@wordpress/hooks'
 import { __ } from '@wordpress/i18n'
 import blockConfig from './block.json'
-import { ImageContainer } from './editor/ImageContainer'
-import { ModalLoader } from './editor/ModalLoader'
-import { SideControls } from './editor/SideControls'
+import { BlockReplacer } from './components/BlockReplacer'
+import { BlockFilter } from './editor/BlockFilter'
+import './editor/editor.css'
 import { blockIcon } from './icons'
-import { Attributes } from './types'
+import { AttributesDeprecated } from './types'
 
-registerBlockType<Attributes>('kevinbatdorf/image-filters', {
+// This block now will replace itself with an image block and open out modal
+// It's essentially a convenience block!
+registerBlockType<AttributesDeprecated>('kevinbatdorf/image-filters', {
     ...blockConfig,
     icon: blockIcon,
     attributes: {
@@ -21,35 +21,33 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters', {
         filteredFromImageId: { type: 'number' },
     },
     title: __('Image Filters', 'image-filters'),
-    edit: ({ attributes, setAttributes, clientId }) => {
-        return (
-            <>
-                <ModalLoader
-                    attributes={attributes}
-                    clientId={clientId}
-                    setAttributes={setAttributes}
-                />
-                <SideControls
-                    attributes={attributes}
-                    clientId={clientId}
-                    setAttributes={setAttributes}
-                />
-                <div {...blockProps()}>
-                    <ImageContainer
-                        clientId={clientId}
-                        attributes={attributes}
-                        setAttributes={setAttributes}>
-                        <InnerBlocks
-                            template={[['core/image', {}]]}
-                            allowedBlocks={['core/image']}
-                            // templateLock="all"
-                        />
-                    </ImageContainer>
-                </div>
-            </>
-        )
-    },
-    save: () => {
-        return <InnerBlocks.Content />
-    },
+    edit: ({ clientId, attributes }) => (
+        <BlockReplacer clientId={clientId} attributes={attributes} />
+    ),
+    save: () => <InnerBlocks.Content />,
+})
+
+// Add to the core image block
+addFilter('editor.BlockEdit', blockConfig.name, (CurrentMenuItems) =>
+    // Not sure how to type these incoming props
+    // eslint-disable-next-line
+    (props: any) => (
+        <BlockFilter {...props} CurrentMenuItems={CurrentMenuItems} />
+    ),
+)
+// Add our attributes
+addFilter('blocks.registerBlockType', blockConfig.name, (settings) => {
+    if (settings.name !== 'core/image') return settings
+    return {
+        ...settings,
+        attributes: {
+            ...settings.attributes,
+            imageFilters: {
+                sourceImageId: { type: 'number' },
+                currentImageId: { type: 'number' },
+                currentFilterSlug: { type: 'string' },
+                filteredFromImageId: { type: 'number' },
+            },
+        },
+    }
 })
