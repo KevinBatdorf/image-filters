@@ -5,11 +5,11 @@ import { sprintf, __ } from '@wordpress/i18n'
 import filtersList from '../filters.json'
 import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
-import { Attributes } from '../types'
+import { AttributesNative } from '../types'
 import { FilteredImage } from './FilteredImage'
 
 type ModalContentProps = {
-    attributes: Attributes
+    attributes: AttributesNative
     setImage: (image: ImageData, filterName: string) => void
     setInfoMessage: (message: string) => void
     clientId?: string
@@ -26,11 +26,14 @@ export const ModalContent = memo(function ModalContent({
     const [errorMessage, setErrorMessage] = useState('')
     const [generated, setGenerated] = useState<string[]>([])
     const isMounted = useIsMounted()
-    const block = useSelect((select) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore-next-line - replaceBlock not added as a type?
-        return select(blockEditorStore).getBlock(clientId ?? '')
-    })
+    const block = useSelect(
+        (select) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore-next-line - replaceBlock not added as a type?
+            return select(blockEditorStore).getBlock(clientId ?? '')
+        },
+        [clientId],
+    )
 
     useEffect(() => {
         if (!wpImage?.source_url) return
@@ -43,7 +46,11 @@ export const ModalContent = memo(function ModalContent({
     }, [generated, setInfoMessage])
 
     useLayoutEffect(() => {
-        if (block && !block?.innerBlocks[0]) {
+        if (
+            attributes.imageFiltersBlockType === 'kevinbatdorf/image-filters' &&
+            block &&
+            !block?.innerBlocks[0]
+        ) {
             setErrorMessage(
                 __(
                     'No image block found. Image Filters requires an image block in the first position.',
@@ -62,7 +69,7 @@ export const ModalContent = memo(function ModalContent({
             return
         }
         setErrorMessage('')
-    }, [wpImage, block])
+    }, [wpImage, block, attributes.imageFiltersBlockType])
 
     if (errorMessage) {
         return (

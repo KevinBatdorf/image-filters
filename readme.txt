@@ -10,7 +10,7 @@ Choose from 22 beautiful image filters.
 
 == Description ==
 
-Image filters is a Gutenberg block that wraps around the native core image block that when opened, will generate a curated set of 22 image filters processed using the binary code of the image itself (i.e. not a CSS overlay or filter).
+Image filters extends the core Gutenberg image block to provide a curated set of 22 image filters processed using the binary code of the image itself (i.e. not a CSS overlay or CSS filter).
 
 - Follow [@kevinbatdorf](https://twitter.com/kevinbatdorf) on Twitter
 - View on [GitHub](https://github.com/KevinBatdorf/image-filters)
@@ -55,6 +55,9 @@ While it's not required, you can speed up the filter processing by making sure y
 
 
 == Changelog ==
+
+= 1.1.0 =
+* Adds filters to the native image block
 
 = 1.0.0 =
 * Initial Release

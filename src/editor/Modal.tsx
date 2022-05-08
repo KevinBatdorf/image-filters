@@ -2,15 +2,19 @@ import { useRef, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { Dialog } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import type { Attributes } from '../types'
+import type {
+    AttributesNative,
+    fnNative,
+    fnNativeWithImageLike,
+} from '../types'
 import { ModalContent } from './ModalContent'
 import { ModalToolbar } from './ModalToolbar'
 
 type ModalProps = {
     open: boolean
-    attributes: Attributes
+    attributes: AttributesNative
     setImage: (image: ImageData, filterName: string) => void
-    setAttributes: (attributes: Attributes) => void
+    setAttributes: fnNative | fnNativeWithImageLike
     clientId?: string
     onClose: () => void
 }

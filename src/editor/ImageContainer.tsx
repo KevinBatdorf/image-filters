@@ -19,7 +19,7 @@ export const ImageContainer = ({
 }: ImageContainerProps) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore-next-line - replaceBlock not added as a type?
-    const { getBlock } = useSelect((select) => select(blockEditorStore))
+    const { getBlock } = useSelect((select) => select(blockEditorStore), [])
     const innerBlockData = getBlock(clientId)?.innerBlocks[0]
     const sourceImageId = innerBlockData?.attributes?.id
 

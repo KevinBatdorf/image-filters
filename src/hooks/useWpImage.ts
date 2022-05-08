@@ -5,8 +5,9 @@ import type { WpImage } from '../types'
 export const useWpImage = (imageId: number | undefined) => {
     const [wpImage, setWpImage] = useState<WpImage>()
 
-    const image: WpImage = useSelect((select) =>
-        select('core')?.getMedia(imageId),
+    const image: WpImage = useSelect(
+        (select) => select('core')?.getMedia(imageId),
+        [imageId],
     )
 
     useEffect(() => {
