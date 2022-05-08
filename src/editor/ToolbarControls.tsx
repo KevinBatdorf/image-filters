@@ -10,23 +10,17 @@ export type ToolbarControlsProps = {
     CurrentMenuItems?: any
     // eslint-disable-next-line
     toolbarProps: any
-    // eslint-disable-next-line
-    block: any
     clientId?: string
 }
 export const ToolbarControls = (props: ToolbarControlsProps) => {
-    const { CurrentMenuItems, openFilters, toolbarProps, block } = props
+    const { CurrentMenuItems, openFilters, toolbarProps } = props
     return (
         <>
             {CurrentMenuItems && <CurrentMenuItems {...toolbarProps} />}
             <BlockControls>
                 <ToolbarGroup>
                     <ToolbarButton
-                        icon={
-                            block?.name === 'core/image'
-                                ? blockIcon
-                                : () => __('View filters', 'image-filters')
-                        }
+                        icon={blockIcon}
                         label={__(
                             'Press to see available filters',
                             'image-filters',

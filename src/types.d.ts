@@ -1,26 +1,12 @@
-export type AttributesNative = {
-    _imageFiltersBlockType?: 'kevinbatdorf/image-filters'
-    sourceImageId: number | undefined
-    currentImageId: number | undefined
-    currentFilterSlug: string | undefined
-    filteredFromImageId: number | undefined
-    imageFilters?: never
-}
 // Adding atributes here could cause conflicts with other blocks
-export type AttributesNested = ImageLike & {
-    _imageFiltersBlockType?: 'core/image'
-    sourceImageId: never
-    currentImageId: never
-    currentFilterSlug: never
-    filteredFromImageId: never
-    imageFilters: AttributesNative
+export type Attributes = ImageLike & {
+    imageFilters: {
+        sourceImageId: number | undefined
+        currentImageId: number | undefined
+        currentFilterSlug: string | undefined
+        filteredFromImageId: number | undefined
+    }
 }
-export type Attributes = AttributesNative | AttributesNested
-export type AttributesWithImageLike = AttributesNative & ImageLike
-export type fnNative = (attributes: AttributesNative) => void
-export type fnNativeWithImageLike = (
-    attributes: AttributesWithImageLike,
-) => void
 export type ImageLike = {
     alt: string
     caption: string
@@ -44,3 +30,10 @@ export type WpImage = {
     status: string
 }
 export type PhotonImage = T
+
+export type AttributesDeprecated = {
+    sourceImageId: number | undefined
+    currentImageId: number | undefined
+    currentFilterSlug: string | undefined
+    filteredFromImageId: number | undefined
+}

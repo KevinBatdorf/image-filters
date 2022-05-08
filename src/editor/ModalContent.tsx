@@ -5,11 +5,11 @@ import { sprintf, __ } from '@wordpress/i18n'
 import filtersList from '../filters.json'
 import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
-import { AttributesNative } from '../types'
+import { Attributes } from '../types'
 import { FilteredImage } from './FilteredImage'
 
 type ModalContentProps = {
-    attributes: AttributesNative
+    attributes: Attributes
     setImage: (image: ImageData, filterName: string) => void
     setInfoMessage: (message: string) => void
     clientId?: string
@@ -21,7 +21,8 @@ export const ModalContent = memo(function ModalContent({
     setInfoMessage,
     clientId,
 }: ModalContentProps) {
-    const { sourceImageId, filteredFromImageId } = attributes
+    const sourceImageId = attributes?.imageFilters?.sourceImageId
+    const filteredFromImageId = attributes?.imageFilters?.filteredFromImageId
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
     const [errorMessage, setErrorMessage] = useState('')
     const [generated, setGenerated] = useState<string[]>([])
@@ -46,19 +47,6 @@ export const ModalContent = memo(function ModalContent({
     }, [generated, setInfoMessage])
 
     useLayoutEffect(() => {
-        if (
-            attributes.imageFiltersBlockType === 'kevinbatdorf/image-filters' &&
-            block &&
-            !block?.innerBlocks[0]
-        ) {
-            setErrorMessage(
-                __(
-                    'No image block found. Image Filters requires an image block in the first position.',
-                    'image-filters',
-                ),
-            )
-            return
-        }
         if (!wpImage?.source_url) {
             setErrorMessage(
                 __(
@@ -69,7 +57,7 @@ export const ModalContent = memo(function ModalContent({
             return
         }
         setErrorMessage('')
-    }, [wpImage, block, attributes.imageFiltersBlockType])
+    }, [wpImage, block])
 
     if (errorMessage) {
         return (
@@ -97,7 +85,10 @@ export const ModalContent = memo(function ModalContent({
                                     setGenerated([...generated, nextFilter])
                                 }
                             }}
-                            currentFilter={attributes.currentFilterSlug ?? ''}
+                            currentFilter={
+                                attributes?.imageFilters?.currentFilterSlug ??
+                                ''
+                            }
                             setImage={setImage}
                         />
                     ))}

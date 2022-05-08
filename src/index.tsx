@@ -1,18 +1,17 @@
-import {
-    InnerBlocks,
-    useBlockProps as blockProps,
-} from '@wordpress/block-editor'
+import { InnerBlocks } from '@wordpress/block-editor'
 import { registerBlockType } from '@wordpress/blocks'
 import { addFilter } from '@wordpress/hooks'
 import { __ } from '@wordpress/i18n'
 import blockConfig from './block.json'
+import { BlockReplacer } from './components/BlockReplacer'
 import { BlockFilter } from './editor/BlockFilter'
-import { Loader } from './editor/Loader'
-import { SideControls } from './editor/SideControls'
+import './editor/editor.css'
 import { blockIcon } from './icons'
-import { Attributes } from './types'
+import { AttributesDeprecated } from './types'
 
-registerBlockType<Attributes>('kevinbatdorf/image-filters', {
+// This block now will replace itself with an image block and open out modal
+// It's essentially a convenience block!
+registerBlockType<AttributesDeprecated>('kevinbatdorf/image-filters', {
     ...blockConfig,
     icon: blockIcon,
     attributes: {
@@ -22,28 +21,8 @@ registerBlockType<Attributes>('kevinbatdorf/image-filters', {
         filteredFromImageId: { type: 'number' },
     },
     title: __('Image Filters', 'image-filters'),
-    edit: ({ attributes, setAttributes, clientId }) => {
-        return (
-            <>
-                <Loader
-                    attributes={attributes}
-                    clientId={clientId}
-                    setAttributes={setAttributes}
-                />
-                <SideControls
-                    attributes={attributes}
-                    clientId={clientId}
-                    setAttributes={setAttributes}
-                />
-                <div {...blockProps()}>
-                    <InnerBlocks
-                        template={[['core/image', {}]]}
-                        allowedBlocks={['core/image']}
-                        // templateLock="all"
-                    />
-                </div>
-            </>
-        )
+    edit: ({ clientId }) => {
+        return <BlockReplacer clientId={clientId} />
     },
     save: () => {
         return <InnerBlocks.Content />
@@ -61,7 +40,7 @@ addFilter('editor.BlockEdit', blockConfig.name, (CurrentMenuItems) =>
 // Add our attributes
 addFilter('blocks.registerBlockType', blockConfig.name, (settings) => {
     if (settings.name !== 'core/image') return settings
-
+    console.log({ settings })
     return {
         ...settings,
         attributes: {
