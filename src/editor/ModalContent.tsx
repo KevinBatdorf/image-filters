@@ -1,15 +1,22 @@
-import { store as blockEditorStore } from '@wordpress/block-editor'
-import { useSelect } from '@wordpress/data'
-import { useEffect, useState, useLayoutEffect, memo } from '@wordpress/element'
+import {
+    useEffect,
+    useRef,
+    useState,
+    useLayoutEffect,
+    memo,
+    useCallback,
+} from '@wordpress/element'
 import { sprintf, __ } from '@wordpress/i18n'
 import filtersList from '../filters.json'
 import { useIsMounted } from '../hooks/useIsMounted'
 import { useWpImage } from '../hooks/useWpImage'
 import { Attributes } from '../types'
 import { FilteredImage } from './FilteredImage'
+import { MediaLoader } from './MediaLoader'
 
 type ModalContentProps = {
     attributes: Attributes
+    setAttributes: (attributes: Attributes) => void
     setImage: (image: ImageData, filterName: string) => void
     setInfoMessage: (message: string) => void
     clientId?: string
@@ -17,24 +24,32 @@ type ModalContentProps = {
 
 export const ModalContent = memo(function ModalContent({
     attributes,
+    setAttributes,
     setImage,
     setInfoMessage,
-    clientId,
 }: ModalContentProps) {
     const sourceImageId = attributes?.imageFilters?.sourceImageId
     const filteredFromImageId = attributes?.imageFilters?.filteredFromImageId
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
-    const [errorMessage, setErrorMessage] = useState('')
+    const [needsImage, setNeedsImage] = useState(false)
     const [generated, setGenerated] = useState<string[]>([])
+    const openMediaRef = useRef<HTMLButtonElement>(null)
     const isMounted = useIsMounted()
-    const block = useSelect(
-        (select) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore-next-line - replaceBlock not added as a type?
-            return select(blockEditorStore).getBlock(clientId ?? '')
-        },
-        [clientId],
-    )
+
+    const setLoaded = useCallback(() => {
+        const filtersV = Object.values(filtersList)
+        if (isMounted) {
+            setGenerated((generated) => {
+                if (filtersV.length === generated.length) return generated
+                const nextFilter = filtersV[generated?.length]
+                return [...generated, nextFilter]
+            })
+        }
+    }, [isMounted])
+
+    useLayoutEffect(() => {
+        setNeedsImage(!wpImage?.source_url)
+    }, [wpImage])
 
     useEffect(() => {
         if (!wpImage?.source_url) return
@@ -43,26 +58,24 @@ export const ModalContent = memo(function ModalContent({
     }, [wpImage])
 
     useEffect(() => {
+        if (!wpImage?.source_url) return
         setInfoMessage(getInfoMessage(generated.length))
-    }, [generated, setInfoMessage])
+    }, [generated, setInfoMessage, wpImage])
 
-    useLayoutEffect(() => {
-        if (!wpImage?.source_url) {
-            setErrorMessage(
-                __(
-                    'No image found. Set an image first before applying filters.',
-                    'image-filters',
-                ),
-            )
-            return
+    useEffect(() => {
+        if (openMediaRef.current) {
+            openMediaRef.current.focus()
         }
-        setErrorMessage('')
-    }, [wpImage, block])
+    }, [needsImage])
 
-    if (errorMessage) {
+    if (needsImage) {
         return (
             <div className="flex items-center justify-center h-full w-full">
-                <p className="m-0 p-0 text-md font-bold">{errorMessage}</p>
+                <MediaLoader
+                    attributes={attributes}
+                    setAttributes={setAttributes}
+                    openMediaRef={openMediaRef}
+                />
             </div>
         )
     }
@@ -76,15 +89,7 @@ export const ModalContent = memo(function ModalContent({
                             key={name}
                             name={name}
                             sourceUrl={wpImage.source_url}
-                            setLoaded={() => {
-                                const filtersV = Object.values(filtersList)
-                                if (filtersV.length === generated.length) return
-                                if (isMounted) {
-                                    const nextFilter =
-                                        filtersV[generated?.length]
-                                    setGenerated([...generated, nextFilter])
-                                }
-                            }}
+                            setLoaded={setLoaded}
                             currentFilter={
                                 attributes?.imageFilters?.currentFilterSlug ??
                                 ''
@@ -124,9 +129,7 @@ export const ModalContent = memo(function ModalContent({
 })
 
 const getInfoMessage = (loaded: number) => {
-    if (loaded === Object.keys(filtersList).length) {
-        return ''
-    }
+    if (loaded === Object.keys(filtersList).length) return ''
     return sprintf(
         __('Generating %1$s of %2$s filters...', 'image-filters'),
         loaded,

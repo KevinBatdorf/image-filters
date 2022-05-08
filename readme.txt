@@ -1,8 +1,8 @@
 === Image Filters ===
 Contributors:      kbat82
 Tags:              filter, image, block, dramatic, lofi
-Tested up to:      5.9
-Stable tag:        1.0.0
+Tested up to:      6.0
+Stable tag:        1.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,9 +18,10 @@ Image filters extends the core Gutenberg image block to provide a curated set of
 = Features =
 - No server requirements.
 - Clones the source image and saves it to the media library.
+- No lock in, deactivate at any time.
 
 = More coming =
-I may expand this block to include more image editing features such as watermarking, more filters, image blending, and more. Open an issue if you have any feature requests, or show support by leavign a review.
+Over time I will expand this block to include more image editing features such as watermarking, more filters, image blending, and more. Open an issue if you have any feature requests, or show support by leavign a review.
 
 == Installation ==
 
@@ -36,13 +37,9 @@ Yes, when you press to import an image filter, the new image will be added to th
 
 You will still have the edited image, which you can use however you like.
 
-= My browser seems locked up? =
-
-When processing a large or complex image, the browser may lock up during a single filter process. If you close the modal (even if you just press the x button while it's locked or press escape), it will safely stop after that single filter has completed. You can open/close the modal at any time without concern and previous filters are cached until reload.
-
 = wasmWebAssembly.instantiateStreaming console message =
 
-While it's not required, you can speed up the filter processing by making sure your server understands application/wasm files and serves them with the proper mime type. In Nginx, for example, you would add a directive like:
+While it's not required (but recommended), you can speed up the filter processing by making sure your server understands application/wasm files and serves them with the proper mime type. In Nginx, for example, you would add a directive like:
 `types {
     application/wasm wasm;
 }`
@@ -59,6 +56,7 @@ While it's not required, you can speed up the filter processing by making sure y
 - Adds filters to the native image block
 - The block will open the modal when inserted
 - Various bug fixes and performance enhancements
+- Prompt users to add an image if one doens't exist
 
 = 1.0.0 =
 - Initial Release

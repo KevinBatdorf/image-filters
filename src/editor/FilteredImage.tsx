@@ -1,4 +1,11 @@
-import { useRef, useEffect, useState, memo } from '@wordpress/element'
+import {
+    useRef,
+    useEffect,
+    useState,
+    memo,
+    useMemo,
+    useCallback,
+} from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import classnames from 'classnames'
 import { motion } from 'framer-motion'
@@ -26,26 +33,28 @@ export const FilteredImage = memo(function FilteredImage({
     const thisOneIsCurrent = name === theFilters[String(currentFilter)]
     const thisOneIsFirst = name === Object.values(theFilters)[0]
     const once = useRef(false)
-    const filtersByValue = Object.fromEntries(
-        Object.entries(filtersList).map((i) => i.reverse()),
-    )
+    const filtersByValue = useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(filtersList).map((i) => i.reverse()),
+        )
+    }, [])
     const { filteredImageData: imageData } = useFilteredImages(
         `${sourceUrl}?filters=${name}`,
         name,
-        filtersByValue[name],
+        filtersByValue[name as keyof typeof filtersByValue],
     )
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
         if (importing || !imageData) return
         setImporting(true)
         setImage(imageData, name)
-    }
+    }, [importing, imageData, name, setImage])
 
     useEffect(() => {
         if (imageData?.data?.length && !once.current) {
             once.current = true
             // Without this the window locks in mid animation
-            const raf = requestAnimationFrame(() => setLoaded())
+            const raf = requestAnimationFrame(setLoaded)
             return () => cancelAnimationFrame(raf)
         }
     }, [imageData, setLoaded, name])
@@ -102,8 +111,11 @@ export const FilteredImage = memo(function FilteredImage({
                 </div>
                 <canvas className="max-w-full block" ref={canvasRef}></canvas>
                 <div
+                    style={{
+                        background: 'radial-gradient(#ffffffd1, #ffffff00)',
+                    }}
                     className={classnames(
-                        'absolute bg-white flex inset-0 items-center justify-center z-40 opacity-0 group-hover:opacity-80 transition duration-300 ease-in-out',
+                        'absolute flex inset-0 items-center justify-center z-40 bg-opacity-80 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out',
                         {
                             'opacity-80': importing,
                         },
