@@ -80,7 +80,8 @@ export const Loader = ({
     }, [clientId])
 
     useEffect(() => {
-        if (attributes?.imageFilters?.sourceImageId) return
+        console.log({ attributes })
+        if (!attributes?.imageFilters?.currentImageId) return
         if (attributes.id === attributes?.imageFilters?.currentImageId) return
         // If the source image (which the user can change) doesn't match the current image, basically we need to reset the state.
         setAttributes({
