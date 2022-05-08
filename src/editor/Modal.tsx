@@ -19,6 +19,7 @@ export const Modal = ({
     open,
     onClose,
     attributes,
+    setAttributes,
     setImage,
     clientId,
 }: ModalProps) => {
@@ -52,6 +53,7 @@ export const Modal = ({
                             />
                             <ModalContent
                                 attributes={attributes}
+                                setAttributes={setAttributes}
                                 setImage={setImage}
                                 setInfoMessage={setInfoMessage}
                                 clientId={clientId}

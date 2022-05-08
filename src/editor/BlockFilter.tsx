@@ -16,6 +16,7 @@ export const BlockFilter = (props: any) => {
         },
         [clientId],
     )
+
     if (!showMenu) {
         return <CurrentMenuItems {...props} />
     }

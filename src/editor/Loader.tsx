@@ -80,7 +80,21 @@ export const Loader = ({
     }, [clientId])
 
     useEffect(() => {
-        console.log({ attributes })
+        if (attributes?.imageFilters?.sourceImageId === attributes.id) {
+            return
+        }
+        setAttributes({
+            ...attributes,
+            imageFilters: {
+                sourceImageId: Number(attributes.id),
+                currentImageId: undefined,
+                currentFilterSlug: undefined,
+                filteredFromImageId: undefined,
+            },
+        })
+    }, [attributes, setAttributes, wpImage])
+
+    useEffect(() => {
         if (!attributes?.imageFilters?.currentImageId) return
         if (attributes.id === attributes?.imageFilters?.currentImageId) return
         // If the source image (which the user can change) doesn't match the current image, basically we need to reset the state.
