@@ -18,10 +18,9 @@ Image filters extends the core Gutenberg image block to provide a curated set of
 = Features =
 - No server requirements.
 - Clones the source image and saves it to the media library.
-- Wraps around the core image block, doesn't filter it.
 
 = More coming =
-I may expand this block to include more image editing features such as watermarking, resizing, cropping, more filters, image blending, and more. Open an issue if you have any feature requests, or show support by leavign a review.
+I may expand this block to include more image editing features such as watermarking, more filters, image blending, and more. Open an issue if you have any feature requests, or show support by leavign a review.
 
 == Installation ==
 
@@ -57,7 +56,9 @@ While it's not required, you can speed up the filter processing by making sure y
 == Changelog ==
 
 = 1.1.0 =
-* Adds filters to the native image block
+- Adds filters to the native image block
+- The block will open the modal when inserted
+- Various bug fixes and performance enhancements
 
 = 1.0.0 =
-* Initial Release
+- Initial Release

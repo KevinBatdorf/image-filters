@@ -43,13 +43,14 @@ export const BlockReplacer = ({
         }
         const blockData = createBlock('core/image')
         replaceBlock(clientId, [blockData]).then(() => {
-            const { clientId } = blockData
-            window.dispatchEvent(
-                new CustomEvent('kevinbatdorf/open-image-filters', {
-                    bubbles: true,
-                    detail: { clientId },
-                }),
-            )
+            // const { clientId } = blockData
+            // Open the modal if they insert the block
+            // window.dispatchEvent(
+            //     new CustomEvent('kevinbatdorf/open-image-filters', {
+            //         bubbles: true,
+            //         detail: { clientId },
+            //     }),
+            // )
         })
     }, [block, replaceBlock, clientId, imageFilters])
 
