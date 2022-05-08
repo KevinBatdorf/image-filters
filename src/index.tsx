@@ -21,7 +21,9 @@ registerBlockType<AttributesDeprecated>('kevinbatdorf/image-filters', {
         filteredFromImageId: { type: 'number' },
     },
     title: __('Image Filters', 'image-filters'),
-    edit: ({ clientId }) => <BlockReplacer clientId={clientId} />,
+    edit: ({ clientId, attributes }) => (
+        <BlockReplacer clientId={clientId} attributes={attributes} />
+    ),
     save: () => <InnerBlocks.Content />,
 })
 
