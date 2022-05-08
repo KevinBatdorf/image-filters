@@ -56,7 +56,7 @@ While it's not required (but recommended), you can speed up the filter processin
 - Adds filters to the native image block
 - The block will open the modal when inserted
 - Various bug fixes and performance enhancements
-- Prompt users to add an image if one doens't exist
+- Prompt users to add an image if one doesn't exist
 
 = 1.0.0 =
 - Initial Release
