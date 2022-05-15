@@ -7,7 +7,7 @@ import { blockIcon } from '../icons'
 export type ToolbarControlsProps = {
     openFilters: () => void
     // eslint-disable-next-line
-    CurrentMenuItems?: any
+    CurrentMenuItems?: React.ComponentType
     // eslint-disable-next-line
     toolbarProps: any
     clientId?: string

@@ -1,5 +1,4 @@
 import { useEffect, useState } from '@wordpress/element'
-import type { Component } from '@wordpress/element'
 import filters from '../filters.json'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useWpImage } from '../hooks/useWpImage'
@@ -13,7 +12,7 @@ type LoaderProps = {
     attributes: Attributes
     setAttributes: (attributes: Attributes) => void
     clientId?: string
-    CurrentMenuItems?: typeof Component
+    CurrentMenuItems?: React.ComponentType
     toolbarProps?: ToolbarControlsProps
 }
 
@@ -46,13 +45,22 @@ export const Loader = ({
         if (!wpImage) return
         const newImage: WpImage | undefined = await uploadImage(image, wpImage)
         if (!newImage) return
-
         const filtersByValue = Object.fromEntries(
             Object.entries(filters).map((i) => i.reverse()),
         )
+        const getHref = (dest: string) => {
+            if (dest === 'media') return newImage?.source_url
+            if (dest === 'attachment') return newImage?.link
+            return attributes?.href
+        }
         setAttributes({
             id: newImage.id,
             caption: newImage.caption.raw,
+            linkDestination: attributes?.linkDestination ?? '',
+            linkTarget: attributes?.linkTarget ?? '',
+            linkClass: attributes?.linkClass ?? '',
+            rel: attributes?.rel ?? '',
+            href: getHref(attributes?.linkDestination),
             url: newImage.source_url,
             alt: newImage.alt_text,
             imageFilters: {

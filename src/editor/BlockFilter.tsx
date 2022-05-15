@@ -2,9 +2,12 @@ import { store as blockEditorStore } from '@wordpress/block-editor'
 import { useSelect } from '@wordpress/data'
 import { Loader } from './Loader'
 
-// eslint-disable-next-line
-export const BlockFilter = (props: any) => {
-    const { CurrentMenuItems } = props
+export const BlockFilter = (
+    CurrentMenuItems: React.ComponentType,
+    // eslint-disable-next-line
+    props: any,
+) => {
+    // eslint-disable-next-line
     const { attributes, setAttributes, clientId } = props
     const showMenu = useSelect(
         (select) => {
