@@ -12,12 +12,18 @@ export type ImageLike = {
     caption: string
     id: number
     url: string
+    linkDestination: string
+    href: string
+    rel: string
+    linkTarget: string
+    linkClass
 }
 export type WpImage = {
     id: number
     source_url: string
     mime_type: string
     alt_text: string
+    link: string
     media_details: {
         file: string
         height: number

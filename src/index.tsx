@@ -28,12 +28,15 @@ registerBlockType<AttributesDeprecated>('kevinbatdorf/image-filters', {
 })
 
 // Add to the core image block
-addFilter('editor.BlockEdit', blockConfig.name, (CurrentMenuItems) =>
-    // Not sure how to type these incoming props
-    // eslint-disable-next-line
-    (props: any) => (
-        <BlockFilter {...props} CurrentMenuItems={CurrentMenuItems} />
-    ),
+addFilter(
+    'editor.BlockEdit',
+    blockConfig.name,
+    (CurrentMenuItems) =>
+        // Not sure how to type these incoming props
+        // eslint-disable-next-line
+        (props: any) =>
+            // It seems like Gutenberg wants a top level component here
+            BlockFilter(CurrentMenuItems, props),
 )
 // Add our attributes
 addFilter('blocks.registerBlockType', blockConfig.name, (settings) => {

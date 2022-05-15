@@ -16,6 +16,7 @@ type FilteredImageProps = {
     name: string
     currentFilter: string
     sourceUrl: string
+    importing: boolean
     setLoaded: () => void
     setImage: (image: ImageData, filterName: string) => void
 }
@@ -25,6 +26,7 @@ export const FilteredImage = memo(function FilteredImage({
     setLoaded,
     sourceUrl,
     setImage,
+    importing: busy,
 }: FilteredImageProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
@@ -45,10 +47,10 @@ export const FilteredImage = memo(function FilteredImage({
     )
 
     const handleClick = useCallback(() => {
-        if (importing || !imageData) return
+        if (importing || !imageData || busy) return
         setImporting(true)
         setImage(imageData, name)
-    }, [importing, imageData, name, setImage])
+    }, [importing, imageData, name, setImage, busy])
 
     useEffect(() => {
         if (imageData?.data?.length && !once.current) {
@@ -85,6 +87,11 @@ export const FilteredImage = memo(function FilteredImage({
     }, [imageData])
 
     if (!imageData?.data?.length) {
+        return null
+    }
+
+    if (busy && !once.current) {
+        // This stops additional rendering if the user presses to import
         return null
     }
 

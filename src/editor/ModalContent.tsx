@@ -33,19 +33,19 @@ export const ModalContent = memo(function ModalContent({
     const wpImage = useWpImage(filteredFromImageId ?? sourceImageId)
     const [needsImage, setNeedsImage] = useState(false)
     const [generated, setGenerated] = useState<string[]>([])
+    const [importing, setImporting] = useState(false)
     const openMediaRef = useRef<HTMLButtonElement>(null)
     const isMounted = useIsMounted()
 
     const setLoaded = useCallback(() => {
         const filtersV = Object.values(filtersList)
-        if (isMounted) {
-            setGenerated((generated) => {
-                if (filtersV.length === generated.length) return generated
-                const nextFilter = filtersV[generated?.length]
-                return [...generated, nextFilter]
-            })
-        }
-    }, [isMounted])
+        if (!isMounted || importing) return
+        setGenerated((generated) => {
+            if (filtersV.length === generated.length) return generated
+            const nextFilter = filtersV[generated?.length]
+            return [...generated, nextFilter]
+        })
+    }, [isMounted, importing])
 
     useLayoutEffect(() => {
         setNeedsImage(!wpImage?.source_url)
@@ -90,11 +90,16 @@ export const ModalContent = memo(function ModalContent({
                             name={name}
                             sourceUrl={wpImage.source_url}
                             setLoaded={setLoaded}
+                            importing={importing}
                             currentFilter={
                                 attributes?.imageFilters?.currentFilterSlug ??
                                 ''
                             }
-                            setImage={setImage}
+                            setImage={(imageData, name) => {
+                                if (importing) return
+                                setImporting(true)
+                                setImage(imageData, name)
+                            }}
                         />
                     ))}
                 {Object.keys(filtersList)
