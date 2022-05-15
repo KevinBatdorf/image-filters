@@ -56,6 +56,7 @@ While it's not required (but recommended), you can speed up the filter processin
 - Replace link if set to link to the Media File
 - Carry over more attributes on media replace
 - Stop image processing/painting if importing
+- Call function in filter instead of returning to fix filter lock
 
 = 1.1.0 =
 - Adds filters to the native image block
