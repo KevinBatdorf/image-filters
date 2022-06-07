@@ -3,6 +3,7 @@ export const blockIcon = () => (
         viewBox="0 0 220 210"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
+        style={{ width: 24, height: 24 }}
         aria-hidden="true"
         focusable="false">
         <path
