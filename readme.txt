@@ -2,7 +2,7 @@
 Contributors:      kbat82
 Tags:              filter, image, block, dramatic, lofi
 Tested up to:      6.0
-Stable tag:        1.2.1
+Stable tag:        1.2.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,9 @@ While it's not required (but recommended), you can speed up the filter processin
 
 
 == Changelog ==
+
+= 1.2.2 =
+- Removes lock file cutting the zip size by a significant amount
 
 = 1.2.1 =
 - Fixes icon rendering in Firefox
