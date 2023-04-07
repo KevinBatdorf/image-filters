@@ -7,6 +7,10 @@ jobs:
     trunk:
         name: Push to WordPress.org
         runs-on: ubuntu-latest
+
+      - name: Install wasm-pack
+        uses: jetli/wasm-pack-action@v0.4.0
+
         steps:
             - uses: actions/checkout@v3
             - name: npm install and build

@@ -2,7 +2,7 @@
 Contributors:      kbat82
 Tags:              filter, image, block, dramatic, lofi
 Tested up to:      6.2
-Stable tag:        1.2.3
+Stable tag:        1.2.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,9 @@ While it's not required (but recommended), you can speed up the filter processin
 
 
 == Changelog ==
+
+= 1.2.4 =
+- Fixes issue with the build release process where it wasnt building the wasm binary
 
 = 1.2.3 =
 - Updates packages and tests WP6.2 compatibility
