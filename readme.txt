@@ -53,7 +53,7 @@ While it's not required (but recommended), you can speed up the filter processin
 == Changelog ==
 
 = 1.2.3 =
-- Updates packages and tests WP6.2 compatability
+- Updates packages and tests WP6.2 compatibility
 
 = 1.2.2 =
 - Removes lock file cutting the zip size by a significant amount
