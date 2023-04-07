@@ -6,7 +6,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Check out code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
             - name: npm install and build
               run: |
                   npm ci
@@ -15,7 +15,7 @@ jobs:
                   CI: true
 
             - name: Package
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: image-filters
                   retention-days: 5
@@ -23,7 +23,6 @@ jobs:
                       ${{ github.workspace }}/
                       !${{ github.workspace }}/node_modules/
                       !${{ github.workspace }}/scripts/
-                      !${{ github.workspace }}/cypress/
                       !${{ github.workspace }}/target/
                       !${{ github.workspace }}/.git/
                       !${{ github.workspace }}/.github/
